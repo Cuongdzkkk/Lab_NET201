@@ -1,0 +1,32 @@
+@{
+    ViewData["Title"] = "Visual Asset";
+}
+
+<div class="flex flex-col items-center justify-center h-[80vh]">
+    
+    <!-- Lightbox Container -->
+    <div class="relative group">
+        <!-- Image Frame -->
+        <div class="p-2 bg-gradient-to-tr from-white/10 to-transparent rounded-lg backdrop-blur-sm border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] transform group-hover:scale-[1.01] transition duration-500">
+            <img src="~/images/@ViewBag.ImageFileName" 
+                 alt="Lab Asset" 
+                 class="max-h-[60vh] max-w-full rounded shadow-inner"
+                 onerror="this.src='https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80'" />
+        </div>
+        
+        <!-- Reflection -->
+        <div class="absolute -bottom-4 left-0 right-0 h-20 bg-gradient-to-t from-transparent to-white/5 transform scale-y-[-1] opacity-20 mask-image-b blur-sm pointer-events-none"></div>
+
+        <!-- Metadata Overlay -->
+        <div class="absolute bottom-6 left-6 right-6 p-4 bg-black/60 backdrop-blur-md rounded border border-white/10 opacity-0 group-hover:opacity-100 transition duration-300">
+            <div class="text-xs text-cyan-400 font-mono mb-1">ASSET_ID: @ViewBag.ImageFileName</div>
+            <div class="text-white font-bold">Visual Component Render</div>
+        </div>
+    </div>
+
+    <div class="mt-12">
+        <a asp-controller="Lab" asp-action="Index" class="px-6 py-2 rounded-full border border-white/20 text-white/50 hover:text-white hover:bg-white/10 hover:border-white/50 transition font-mono text-sm">
+            <i class="bi bi-grid-3x3-gap-fill mr-2"></i> GALLERY INDEX
+        </a>
+    </div>
+</div>

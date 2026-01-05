@@ -1,0 +1,62 @@
+@{
+    ViewData["Title"] = "Lab 01";
+}
+
+<!-- LAB 01 SUB-MENU -->
+<div class="max-w-4xl mx-auto">
+    <div class="flex items-center gap-4 mb-8">
+        <a asp-controller="Home" asp-action="Index" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white hover:bg-white/10 transition">
+            <i class="bi bi-arrow-left"></i>
+        </a>
+        <h1 class="text-3xl font-bold tracking-tight">LAB MODULE 01 // EXERCISES</h1>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        
+        <!-- Action Cards -->
+        <a asp-action="TestContent" class="bento-card group block text-decoration-none hover:border-cyan-500/50 transition">
+            <div class="flex justify-between items-start">
+                <div class="w-12 h-12 rounded-lg bg-cyan-900/30 flex items-center justify-center text-cyan-400 mb-4">
+                    <i class="bi bi-file-text text-xl"></i>
+                </div>
+                <i class="bi bi-arrow-right text-white/20 group-hover:text-cyan-400 transition"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-1">Content Result</h3>
+            <p class="text-sm text-gray-500">Return raw string content.</p>
+        </a>
+
+        <a asp-action="TestJson" class="bento-card group block text-decoration-none hover:border-yellow-500/50 transition">
+            <div class="flex justify-between items-start">
+                <div class="w-12 h-12 rounded-lg bg-yellow-900/30 flex items-center justify-center text-yellow-400 mb-4">
+                    <i class="bi bi-file-code text-xl"></i>
+                </div>
+                <i class="bi bi-arrow-right text-white/20 group-hover:text-yellow-400 transition"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-1">JSON Result</h3>
+            <p class="text-sm text-gray-500">Return structured data object.</p>
+        </a>
+
+        <a asp-action="GoAway" class="bento-card group block text-decoration-none hover:border-red-500/50 transition">
+            <div class="flex justify-between items-start">
+                <div class="w-12 h-12 rounded-lg bg-red-900/30 flex items-center justify-center text-red-400 mb-4">
+                    <i class="bi bi-box-arrow-right text-xl"></i>
+                </div>
+                <i class="bi bi-arrow-right text-white/20 group-hover:text-red-400 transition"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-1">Redirect</h3>
+            <p class="text-sm text-gray-500">Perform a redirect sequence.</p>
+        </a>
+
+        <a asp-action="ViewImage" class="bento-card group block text-decoration-none hover:border-green-500/50 transition">
+            <div class="flex justify-between items-start">
+                <div class="w-12 h-12 rounded-lg bg-green-900/30 flex items-center justify-center text-green-400 mb-4">
+                    <i class="bi bi-image text-xl"></i>
+                </div>
+                <i class="bi bi-arrow-right text-white/20 group-hover:text-green-400 transition"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-1">File Result</h3>
+            <p class="text-sm text-gray-500">Stream visual assets.</p>
+        </a>
+
+    </div>
+</div>

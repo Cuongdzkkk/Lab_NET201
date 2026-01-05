@@ -1,0 +1,23 @@
+@{
+    ViewData["Title"] = "Content Result";
+}
+
+<div class="flex items-center justify-center h-[70vh]">
+    <div class="bento-card max-w-lg w-full p-8 text-center relative border-l-4 border-l-cyan-500">
+        <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 w-12 h-12 bg-cyan-900/50 backdrop-blur-md rounded-full flex items-center justify-center border border-cyan-500/30 shadow-[0_0_20px_rgba(0,240,255,0.3)]">
+            <i class="bi bi-chat-quote-fill text-cyan-400 text-xl"></i>
+        </div>
+        
+        <h2 class="text-xs font-mono text-cyan-500 tracking-widest mb-6 mt-2">INCOMING TRANSMISSION</h2>
+        
+        <p class="text-2xl md:text-3xl font-light text-white leading-relaxed text-glow">
+            "@ViewBag.Message"
+        </p>
+        
+        <div class="mt-8 border-t border-white/10 pt-6">
+             <a asp-controller="Lab" asp-action="Index" class="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white transition font-mono uppercase tracking-wider">
+                <i class="bi bi-arrow-return-left"></i> Acknowledge
+            </a>
+        </div>
+    </div>
+</div>

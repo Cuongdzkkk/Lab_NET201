@@ -1,0 +1,44 @@
+@model dynamic
+@{
+    ViewData["Title"] = "JSON Result";
+    // Serialize model to nicely formatted JSON string
+    var jsonString = System.Text.Json.JsonSerializer.Serialize(Model, new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
+}
+
+<div class="max-w-3xl mx-auto mt-10">
+    <div class="flex items-center justify-between mb-6">
+        <h2 class="text-xl font-bold font-mono flex items-center gap-3">
+            <i class="bi bi-terminal-fill text-yellow-500"></i> 
+            DATA_STREAM_OUTPUT
+        </h2>
+        <a asp-controller="Lab" asp-action="Index" class="text-sm text-gray-400 hover:text-white transition font-mono">
+            [ CLOSE CONNECTION ]
+        </a>
+    </div>
+
+    <!-- Terminal Window -->
+    <div class="bg-[#0f0f15] border border-white/10 rounded-lg shadow-2xl overflow-hidden font-mono text-sm">
+        <!-- Terminal Header -->
+        <div class="bg-white/5 px-4 py-2 flex items-center justify-between border-b border-white/5">
+            <div class="flex gap-2">
+                <div class="w-3 h-3 rounded-full bg-red-500/50"></div>
+                <div class="w-3 h-3 rounded-full bg-yellow-500/50"></div>
+                <div class="w-3 h-3 rounded-full bg-green-500/50"></div>
+            </div>
+            <div class="text-xs text-gray-500">json_parser.exe</div>
+        </div>
+        
+        <!-- Code Content -->
+        <div class="p-6 overflow-x-auto relative group">
+            <button onclick="navigator.clipboard.writeText(this.nextElementSibling.innerText)" class="absolute top-4 right-4 bg-white/10 hover:bg-white/20 text-xs px-3 py-1 rounded transition opacity-0 group-hover:opacity-100">
+                COPY
+            </button>
+            <pre class="text-green-400 leading-relaxed">@jsonString</pre>
+        </div>
+        
+        <!-- Terminal Footer -->
+        <div class="bg-black/30 px-4 py-1 text-[10px] text-gray-600 border-t border-white/5">
+            Process finished with exit code 0
+        </div>
+    </div>
+</div>
