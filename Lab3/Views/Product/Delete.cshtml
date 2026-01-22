@@ -1,0 +1,49 @@
+@model Lab3.Models.Product
+
+@{
+    ViewData["Title"] = "Decommission Asset";
+}
+
+<div style="max-width: 600px; margin: 0 auto; padding: 80px var(--page-padding); text-align: center;">
+    
+    <!-- HAZARD WARNING -->
+    <div style="border: 2px solid #A00; padding: 24px; margin-bottom: 40px; background: rgba(170, 0, 0, 0.05);">
+        <h2 class="serif" style="color: #A00; font-size: 2rem; margin-bottom: 16px;">// WARNING: DESTRUCTIVE_ACTION</h2>
+        <p class="mono" style="font-size: 0.9rem;">
+            CONFIRM DECOMMISSION SEQUENCE. THIS ACTION CANNOT BE REVERSED.
+            <br/>DATA INTEGRITY WILL BE PERMANENTLY ALTERED.
+        </p>
+    </div>
+
+    <!-- TARGET ASSET -->
+    <h3 class="mono text-muted" style="font-size: 0.8rem; margin-bottom: 24px;">TARGET_ASSET_IDENTIFIER:</h3>
+    
+    <div style="display: inline-block; border: 1px solid var(--border-color); padding: 24px; margin-bottom: 40px; text-align: left; min-width: 300px;">
+        <div style="display: flex; gap: 24px; align-items: center;">
+            <img src="@(string.IsNullOrEmpty(Model.ImageUrl) ? "https://placehold.co/100" : Model.ImageUrl)" 
+                 style="width: 80px; height: 80px; object-fit: cover; filter: grayscale(100%); border: 1px solid var(--text-main);" />
+            <div>
+                <div class="mono" style="font-size: 0.8rem; color: var(--text-muted);">REF_ID: #@Model.ProductId</div>
+                <div class="serif" style="font-size: 1.5rem; line-height: 1;">@Model.Name</div>
+                <div class="mono accent-clay">@Model.UnitPrice.ToString("C0")</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ACTION FLIGHT CONTROL -->
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="ProductId" />
+         <div style="display: flex; gap: 24px; justify-content: center;">
+             <button type="submit" class="btn-analog" style="border-color: #A00; color: #A00;">[ CONFIRM DELETION ]</button>
+             <a asp-action="Index" class="btn-outline" style="padding: 16px 32px; text-decoration: none;">ABORT SEQUENCE</a>
+         </div>
+    </form>
+</div>
+
+<style>
+    /* Local override for danger button hover */
+    button[type="submit"]:hover {
+        background-color: #A00 !important;
+        color: #FFF !important;
+    }
+</style>

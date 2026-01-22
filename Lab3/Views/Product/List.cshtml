@@ -1,0 +1,102 @@
+@model IEnumerable<Lab3.Models.Product>
+
+@{
+    ViewData["Title"] = "Data Sheet";
+}
+
+<div style="padding: 80px var(--page-padding);">
+    
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px;">
+        <div>
+            <span class="mono text-muted">VIEWING_MODE: RAW_DATA_SHEET</span>
+            <h1 class="serif" style="font-size: 2.5rem; margin: 0; line-height: 1;">Master Inventory List</h1>
+        </div>
+        <div style="display: flex; gap: 16px;">
+            <a asp-action="Index" class="btn-outline" style="text-decoration: none;">[ BLOCK VIEW ]</a>
+            <a asp-action="Create" class="btn-analog" style="text-decoration: none;">+ INSERT DATA</a>
+        </div>
+    </div>
+
+    <div class="data-sheet-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th class="mono">REF_ID</th>
+                    <th class="mono">IDENTIFIER</th>
+                    <th class="mono">CATEGORY</th>
+                    <th class="mono">COLOR</th>
+                    <th class="mono text-right">VAL</th>
+                    <th class="mono text-right">QTY</th>
+                    <th class="mono">CREATED</th>
+                    <th class="mono">OPERATIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model) {
+                    <tr>
+                        <td class="mono mute">#@item.ProductId</td>
+                        <td class="mono fw-bold">@item.Name</td>
+                        <td class="mono">@item.Category</td>
+                        <td class="mono">@item.Color</td>
+                        <td class="mono text-right accent-clay">@item.UnitPrice.ToString("N0")</td>
+                        <td class="mono text-right">
+                            @if(item.AvailableQuantity < 5) {
+                                <span style="color: red;">@item.AvailableQuantity</span>
+                            } else {
+                                <span>@item.AvailableQuantity</span>
+                            }
+                        </td>
+                        <td class="mono small text-muted">@item.CreatedDate.ToString("yyyy-MM-dd")</td>
+                        <td class="mono">
+                            <a asp-action="Edit" asp-route-id="@item.ProductId" class="op-link">[EDIT]</a>
+                            <a asp-action="Details" asp-route-id="@item.ProductId" class="op-link">[DET]</a>
+                            <a asp-action="Delete" asp-route-id="@item.ProductId" class="op-link text-danger">[X]</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    
+    <div style="margin-top: 24px; border-top: 1px dashed var(--border-color); padding-top: 12px; display: flex; justify-content: space-between;">
+        <span class="mono small text-muted">TOTAL_RECORDS: @Model.Count()</span>
+        <span class="mono small text-muted">GENERATED: @DateTime.Now.ToString("HH:mm:ss")</span>
+    </div>
+
+</div>
+
+<style>
+    .data-sheet-container {
+        border: 1px solid var(--text-main);
+        overflow-x: auto;
+    }
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.85rem;
+    }
+    .data-table th {
+        background: rgba(0,0,0,0.03);
+        padding: 12px;
+        text-align: left;
+        border-bottom: 2px solid var(--text-main);
+        font-weight: normal;
+        letter-spacing: 0.05em;
+    }
+    .data-table td {
+        padding: 8px 12px;
+        border-bottom: 1px solid var(--border-color);
+    }
+    .data-table tr:hover {
+        background: rgba(85, 107, 47, 0.05); /* Subtle Olive tint */
+    }
+    .text-right { text-align: right; }
+    .mute { color: var(--text-muted); opacity: 0.7; }
+    .op-link {
+        text-decoration: none;
+        color: var(--text-main);
+        margin-right: 8px;
+        font-size: 0.75rem;
+    }
+    .op-link:hover { text-decoration: underline; }
+</style>

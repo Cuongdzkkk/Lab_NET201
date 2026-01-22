@@ -1,0 +1,291 @@
+/* =========================================
+   LIQUID LUXURY: GLOBAL DESIGN SYSTEM
+   Theme: "Mercury & Glass"
+   ========================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Space+Grotesk:wght@300;600;700&display=swap');
+
+:root {
+    /* --- COLOR PALETTE --- */
+    --bg-void: #050510;
+    --text-white: #FFFFFF;
+    --text-silver: #B0B0C0;
+
+    --accent-cyan: #00f3ff;
+    --accent-purple: #bc13fe;
+    --accent-gold: #ffd700;
+
+    /* --- GLASS MATERIAL --- */
+    --glass-surface: rgba(15, 15, 25, 0.65);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-highlight: rgba(255, 255, 255, 0.15);
+    --glass-blur: blur(20px);
+
+    /* --- SHADOWS & GLOW --- */
+    --shadow-depth: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    --glow-cyan: 0 0 20px rgba(0, 243, 255, 0.3);
+
+    /* --- PHYSICS --- */
+    --ease-elastic: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* === UNIVERSAL RESET === */
+html,
+body {
+    background-color: var(--bg-void);
+    color: var(--text-white);
+    font-family: 'Outfit', sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Space Grotesk', sans-serif;
+    color: var(--text-white);
+    font-weight: 700;
+}
+
+a {
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+/* === LAYOUT CONTAINERS === */
+.container-cinematic {
+    width: 90vw;
+    max-width: 1800px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+body {
+    padding-top: 100px;
+    /* Space for fixed header */
+}
+
+/* === NAVIGATION (Floating Glass) === */
+.navbar-glass {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90vw;
+    background: rgba(10, 10, 20, 0.8);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 1rem 2rem;
+    z-index: 1000;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.navbar-brand {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: var(--text-white) !important;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.nav-link {
+    color: var(--text-silver) !important;
+    font-weight: 500;
+    margin-left: 20px;
+    position: relative;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: var(--text-white) !important;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+/* === GLASS PANELS (The "Cards") === */
+.glass-panel {
+    background: var(--glass-surface);
+    backdrop-filter: var(--glass-blur);
+    /* Standard syntax */
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 2rem;
+    box-shadow: var(--shadow-depth);
+    transition: transform 0.4s var(--ease-elastic), box-shadow 0.4s ease;
+}
+
+/* === UNIVERSAL FORMS (Create/Edit) === */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+label.control-label {
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.75rem;
+    color: var(--text-silver);
+    margin-bottom: 0.5rem;
+    display: block;
+    font-weight: 700;
+}
+
+.form-control,
+.form-select {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--glass-border);
+    color: white;
+    border-radius: 12px;
+    padding: 0.8rem 1rem;
+    font-family: 'Space Grotesk', sans-serif;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+    background: rgba(0, 0, 0, 0.6);
+    border-color: var(--accent-cyan);
+    box-shadow: var(--glow-cyan);
+    color: white;
+    outline: none;
+}
+
+/* === UNIVERSAL TABLES (Data Grid) === */
+.table-responsive {
+    border-radius: 24px;
+    overflow: hidden;
+}
+
+.table {
+    width: 100%;
+    margin-bottom: 0;
+    color: var(--text-silver);
+    border-collapse: separate;
+    border-spacing: 0 8px;
+    /* Gap between rows */
+}
+
+.table thead th {
+    background: transparent;
+    border: none;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 1.5px;
+    padding: 1rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.table tbody tr {
+    background: rgba(255, 255, 255, 0.03);
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.table tbody tr td {
+    border: none;
+    padding: 1.25rem 1rem;
+    vertical-align: middle;
+}
+
+.table tbody tr td:first-child {
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+}
+
+.table tbody tr td:last-child {
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+.table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: scale(1.005);
+}
+
+/* === BUTTONS (Neon) === */
+.btn {
+    border-radius: 50px;
+    padding: 0.6rem 1.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: var(--text-white);
+    color: black;
+}
+
+.btn-primary:hover {
+    background: var(--accent-cyan);
+    box-shadow: var(--glow-cyan);
+    transform: translateY(-2px);
+}
+
+.btn-danger {
+    background: rgba(255, 50, 50, 0.2);
+    color: #ff5555;
+    border: 1px solid rgba(255, 50, 50, 0.5);
+}
+
+.btn-danger:hover {
+    background: #ff5555;
+    color: white;
+    box-shadow: 0 0 20px rgba(255, 85, 85, 0.4);
+}
+
+/* === UTILS === */
+.text-cyan {
+    color: var(--accent-cyan) !important;
+}
+
+.text-gold {
+    color: var(--accent-gold) !important;
+}
+
+/* === BENTO GRID (Homepage Specifics) === */
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin-top: 40px;
+}
+
+.bento-card {
+    background: var(--glass-surface);
+    backdrop-filter: blur(24px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.4s var(--ease-elastic), background 0.3s ease;
+    text-decoration: none;
+    color: white;
+    min-height: 280px;
+    position: relative;
+    overflow: hidden;
+}
+
+.bento-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    background: rgba(20, 20, 35, 0.85);
+    border-color: var(--glass-highlight);
+    color: white;
+}
+
+.span-col-2 {
+    grid-column: span 2;
+}
+
+.span-row-2 {
+    grid-row: span 2;
+}

@@ -1,0 +1,28 @@
+@model IEnumerable<Lab3.Models.Product>
+
+@{
+    ViewData["Title"] = "Catalog";
+}
+
+<div class="shop-header" style="padding: var(--page-padding); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: baseline;">
+    <h2 class="serif" style="font-size: 3rem;">Catalog_01</h2>
+    <div class="mono" style="font-size: 0.8rem;">
+        INDEX: @Model.Count() ITEMS
+    </div>
+</div>
+
+<div class="shop-grid">
+    @foreach (var item in Model) {
+        <a asp-action="Details" asp-route-id="@item.ProductId" class="product-card">
+            <div class="card-frame">
+                <div class="card-img-wrapper">
+                    <img src="@(string.IsNullOrEmpty(item.ImageUrl) ? "https://placehold.co/400x400/1c1c1c/FFF?text=IMG" : item.ImageUrl)" class="card-img" alt="@item.Name" />
+                </div>
+                <div class="card-meta">
+                    <span class="mono">@item.Name.ToUpper()</span>
+                    <span class="mono accent-clay">@item.UnitPrice.ToString("C0")</span>
+                </div>
+            </div>
+        </a>
+    }
+</div>

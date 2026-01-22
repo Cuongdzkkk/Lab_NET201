@@ -1,0 +1,59 @@
+@model Lab2.Models.Order
+
+@{
+    ViewData["Title"] = "New Launch";
+}
+
+<div style="max-width: 900px; margin: 0 auto;">
+    
+    <div class="flex-between mb-2" style="border-bottom: 1px solid var(--neon-purple); padding-bottom: 1rem;">
+        <div>
+            <div style="color:var(--neon-purple); letter-spacing:2px; font-family:var(--font-mono);">// PROTOCOL: 04</div>
+            <h1 style="margin:0;">INITIALIZE LAUNCH</h1>
+        </div>
+        <a asp-action="Index" class="btn btn-cyan" style="border-style:dashed;">[ CANCEL MISSION ]</a>
+    </div>
+
+    <form asp-action="CreateOrder" method="post">
+        
+        <!-- SECTION 1: MISSION INFO -->
+        <div class="bento-card">
+            <h3 style="color:var(--neon-cyan);">MISSION PARAMETERS</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 1rem;">
+                <div>
+                    <label class="form-label">TARGET ID (CUSTOMER)</label>
+                    <input asp-for="CustomerName" class="form-control" autocomplete="off" />
+                    <span asp-validation-for="CustomerName" class="text-danger"></span>
+                </div>
+                <div>
+                    <label class="form-label">INITIAL STATUS</label>
+                    <select asp-for="Status" class="form-control">
+                        <option value="New">NEW</option>
+                        <option value="Shipped">IN_TRANSIT</option>
+                        <option value="Completed">DELIVERED</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 2: INVENTORY -->
+        <div class="bento-card" style="border-top: 3px solid var(--neon-purple); margin-top: 2rem;">
+            <div class="flex-between">
+                <h3 style="color:var(--neon-purple);">CARGO MANIFEST</h3>
+                <button type="button" id="addDetailBtn" class="btn btn-pink btn-sm">+ ADD SLOT</button>
+            </div>
+            
+            <div id="inventory-list" style="margin-top: 1.5rem;">
+                <!-- Rows injected by JS -->
+            </div>
+        </div>
+
+        <!-- SUBMIT -->
+        <div class="text-right" style="margin-top: 2rem; text-align: right;">
+            <button type="submit" class="btn btn-pink" style="padding: 1rem 3rem; font-size: 1.2rem;">
+                ENGAGE LAUNCH
+            </button>
+        </div>
+
+    </form>
+</div>

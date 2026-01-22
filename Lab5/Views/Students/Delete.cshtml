@@ -1,0 +1,47 @@
+@model Lab5.Models.Student
+
+@{
+    ViewData["Title"] = "Delete Student";
+}
+
+<h1>Xóa Sinh Viên</h1>
+
+<div class="alert alert-warning">
+    <h4>Bạn có chắc chắn muốn xóa sinh viên này?</h4>
+</div>
+
+<div class="card">
+    <div class="card-header bg-danger text-white">
+        <h5>Thông Tin Sinh Viên</h5>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Student ID</dt>
+            <dd class="col-sm-9">@Model.StudentId</dd>
+            
+            <dt class="col-sm-3">First Name</dt>
+            <dd class="col-sm-9">@Model.FirstName</dd>
+            
+            <dt class="col-sm-3">Last Name</dt>
+            <dd class="col-sm-9">@Model.LastName</dd>
+        </dl>
+        
+        @if (Model.StudentDetails != null)
+        {
+            <div class="alert alert-info">
+                <strong>Lưu ý:</strong> Student Details sẽ bị xóa cùng!
+            </div>
+        }
+    </div>
+</div>
+
+<form asp-action="Delete" method="post" class="mt-3">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="StudentId" />
+    <button type="submit" class="btn btn-danger">
+        <i class="fas fa-trash"></i> Xác Nhận Xóa
+    </button>
+    <a asp-action="Index" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Hủy
+    </a>
+</form>

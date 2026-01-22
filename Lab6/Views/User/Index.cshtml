@@ -1,0 +1,113 @@
+@model Lab6.Models.ViewModels.UserViewModel
+
+@{
+    ViewData["Title"] = "Quản Lý Người Dùng - DI Lifetime Demo";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <div class="card border-info">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Service Lifetime Test</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-2">
+                            <div class="card-body bg-light">
+                                <h6 class="card-title">UserService <span class="badge bg-warning text-dark">Scoped</span></h6>
+                                <p class="font-monospace text-primary mb-0">@Model.UserServiceId</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-2">
+                            <div class="card-body bg-light">
+                                <h6 class="card-title">LoggingService <span class="badge bg-success">Singleton</span></h6>
+                                <p class="font-monospace text-success mb-0">@Model.LoggingServiceId</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-2">
+                            <div class="card-body bg-light">
+                                <h6 class="card-title">EmailService #1 <span class="badge bg-danger">Transient</span></h6>
+                                <p class="font-monospace text-danger mb-0">@Model.EmailService1Id</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-2">
+                            <div class="card-body bg-light">
+                                <h6 class="card-title">EmailService #2 <span class="badge bg-danger">Transient</span></h6>
+                                <p class="font-monospace text-danger mb-0">@Model.EmailService2Id</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+        <div class="card border-primary">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Thêm User Mới</h5>
+            </div>
+            <div class="card-body">
+                <form asp-action="AddUser" method="post">
+                    <div class="input-group mb-3">
+                        <input type="text" name="userName" class="form-control" required />
+                        <button type="submit" class="btn btn-primary">Thêm User</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0">Danh Sách Users</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    @foreach (var user in Model.Users)
+                    {
+                        <li class="list-group-item">@user</li>
+                    }
+                </ul>
+                <p class="text-muted mt-2 mb-0"><small>Tổng: @Model.Users.Count users</small></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+        <div class="card border-success">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">System Logs</h5>
+            </div>
+            <div class="card-body" style="max-height: 400px; overflow-y: auto;">
+                <ul class="list-group">
+                    @if (Model.Logs.Any())
+                    {
+                        @foreach (var log in Model.Logs)
+                        {
+                            <li class="list-group-item list-group-item-light">
+                                <small class="font-monospace">@log</small>
+                            </li>
+                        }
+                    }
+                    else
+                    {
+                        <li class="list-group-item">Chưa có log nào</li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="text-center mt-3">
+    <a asp-action="LifetimeExplanation" class="btn btn-info btn-lg">Xem giải thích DI Lifetime</a>
+</div>

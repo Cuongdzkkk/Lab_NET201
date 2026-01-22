@@ -1,0 +1,34 @@
+@model Lab6.Models.Enrollment
+
+@{
+    ViewData["Title"] = "Xóa Đăng ký";
+}
+
+<h2>@ViewData["Title"]</h2>
+<div class="alert alert-danger">
+    <h4>Bạn có chắc chắn muốn xóa đăng ký này?</h4>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Sinh viên</dt>
+            <dd class="col-sm-9">@Model.Student?.StudentName</dd>
+
+            <dt class="col-sm-3">Khóa học</dt>
+            <dd class="col-sm-9">@Model.Course?.CourseName</dd>
+
+            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.EnrollmentDate)</dt>
+            <dd class="col-sm-9">@Model.EnrollmentDate.ToString("dd/MM/yyyy")</dd>
+
+            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Grade)</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.Grade)</dd>
+        </dl>
+
+        <form asp-action="Delete" method="post">
+            <input type="hidden" asp-for="EnrollmentId" />
+            <button type="submit" class="btn btn-danger">Xác nhận Xóa</button>
+            <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+        </form>
+    </div>
+</div>

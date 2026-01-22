@@ -3,7 +3,7 @@
 }
 
 <!-- NEXUS DASHBOARD (Bento Grid) -->
-<div class="grid grid-cols-1 md:grid-cols-4 gap-6 h-full">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 h-full pb-32">
 
     <!-- 1. HERO CARD (Span 2) -->
     <div class="bento-card col-span-1 md:col-span-2 row-span-1 flex flex-col justify-between" style="min-height: 300px;">
@@ -29,8 +29,8 @@
         </div>
     </div>
 
-    <!-- 2. LAB 1 MODULE (Interactive 3D) -->
-    <a asp-controller="Lab" asp-action="Index" class="bento-card col-span-1 md:col-span-1 row-span-1 group block relative text-decoration-none">
+    <!-- 2. LAB 1 MODULE (Span 2) - Linked to Control Panel -->
+    <a asp-controller="Home" asp-action="Lab1Control" class="bento-card col-span-1 md:col-span-2 row-span-1 group relative overflow-hidden flex flex-col justify-end p-6 no-underline">
         <div class="absolute inset-0 opacity-60 group-hover:opacity-100 transition duration-500">
             <!-- Thumbnail Logic: If file exists use it, else CSS Fallback -->
             <img src="~/images/ai-la-gi-cong-dung-cua-ai.jpg" 
@@ -46,7 +46,7 @@
         
         <div class="absolute bottom-0 left-0 p-6 w-full bg-gradient-to-t from-black/90 to-transparent">
             <h3 class="text-2xl font-bold text-white group-hover:text-cyan-400 transition">LAB MODULE 01</h3>
-            <p class="text-sm text-gray-400 font-mono">MVC FUNDAMENTALS</p>
+            <p class="text-sm text-gray-400 font-mono">ACCESS CONTROL PANEL (USER/PRODUCT/FILE)</p>
         </div>
         
         <div class="absolute top-4 right-4">
@@ -61,27 +61,144 @@
         <div class="text-gray-700 text-xs mt-1">COMING SOON</div>
     </div>
 
-    <!-- 4. WIDGETS STRIP (Span 4) -->
-    <div class="bento-card col-span-1 md:col-span-4 flex items-center justify-between py-4 px-6 md:px-10">
-        <div class="flex items-center gap-4">
-            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center font-bold">
-                Q
+    <!-- 4. NEURAL MONITOR MODULE (Span 4) -->
+    <div class="bento-card col-span-1 md:col-span-4 relative overflow-hidden flex items-center justify-between p-0" style="min-height: 100px;">
+        
+        <!-- Oscilloscope Canvas (Background) -->
+        <canvas id="neural-monitor" class="absolute inset-0 w-full h-full opacity-40"></canvas>
+        
+        <!-- Overlay Content -->
+        <div class="relative z-10 w-full h-full flex items-center justify-between px-6 md:px-10 pointer-events-none py-4">
+            
+            <!-- Left: Module Identity -->
+            <div class="flex items-center gap-4">
+                <div id="status-indicator" class="w-3 h-3 bg-cyan-400 rounded-full shadow-[0_0_10px_#00f3ff] animate-pulse"></div>
+                <div>
+                     <div class="text-sm font-bold text-white tracking-widest">NEURAL MONITOR</div>
+                     <div class="text-[10px] text-cyan-500 font-mono tracking-widest">SYSTEM INTELLIGENCE CENTER</div>
+                </div>
             </div>
-            <div>
-                <div class="text-sm font-bold text-white">DOAN QUOC CUONG // BROCODE</div>
-                <div class="text-xs text-gray-400">Spatial Dashboard Architecture</div>
+
+            <!-- Right: Live Metrics -->
+            <div class="flex gap-8 font-mono">
+                 <div class="text-right">
+                    <div class="text-[10px] text-gray-500">CPU_CORE</div>
+                    <div id="metric-cpu" class="text-xl text-cyan-400 font-bold text-shadow-glow">0%</div>
+                 </div>
+                 <div class="text-right hidden md:block">
+                    <div class="text-[10px] text-gray-500">RAM_ALLOC</div>
+                    <div id="metric-ram" class="text-xl text-white font-bold">0GB</div>
+                 </div>
+                 <div class="text-right hidden md:block">
+                    <div class="text-[10px] text-gray-500">THERMAL</div>
+                    <div id="metric-temp" class="text-xl text-white font-bold">0°C</div>
+                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. SECURITY TERMINAL (Span 2) -->
+    <div class="bento-card col-span-1 md:col-span-4 lg:col-span-2 row-span-1 flex flex-col justify-between bg-black/40 border border-green-900/30 shadow-[0_0_15px_rgba(0,255,100,0.1)] p-0 overflow-hidden group hover:border-green-500/50 transition duration-500">
+        <!-- Header -->
+        <div class="bg-green-900/20 px-4 py-2 flex items-center justify-between border-b border-green-500/20">
+             <div class="flex items-center gap-2">
+                <i class="bi bi-shield-lock-fill text-green-500 text-xs"></i>
+                <span class="text-[10px] font-mono text-green-400 tracking-widest">SEC_TERMINAL_V1</span>
+             </div>
+             <div class="flex gap-1">
+                <div class="w-2 h-2 rounded-full bg-green-500/50"></div>
+                <div class="w-2 h-2 rounded-full bg-green-500/50 animate-pulse"></div>
             </div>
         </div>
         
-        <div class="hidden md:flex gap-8">
-            <div class="text-center">
-                <div class="text-xs text-gray-500 font-mono">LATENCY</div>
-                <div class="text-sm text-green-400">12ms</div>
+        <!-- Terminal Body -->
+        <div id="security-screen" class="p-4 font-mono text-xs md:text-sm text-green-500 flex-grow flex flex-col gap-2 overflow-y-auto" style="min-height: 150px;">
+            <div>> SYSTEM READY...</div>
+            <div>> WAITING FOR AUTHENTICATION...</div>
+            <div id="terminal-output" class="text-white"></div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="p-4 bg-black/60 border-t border-green-500/20 flex flex-col gap-3">
+            <div class="flex items-center gap-2">
+                <span class="text-green-500">></span>
+                <input type="text" id="terminal-input" placeholder="ENTER PASSCODE (CDIO2026)" class="bg-transparent border-none outline-none text-green-400 w-full font-mono placeholder-green-800 uppercase focus:ring-0">
             </div>
-            <div class="text-center">
-                <div class="text-xs text-gray-500 font-mono">UPTIME</div>
-                <div class="text-sm text-white">42h 19m</div>
+            
+            <div class="flex gap-2">
+                <button id="btn-login" class="flex-1 bg-green-900/30 hover:bg-green-500 hover:text-black border border-green-500/30 text-green-500 py-1 text-[10px] font-mono tracking-widest transition uppercase">
+                    LOGIN
+                </button>
+                <button id="btn-protocol" class="flex-1 bg-red-900/30 hover:bg-red-500 hover:text-black border border-red-500/30 text-red-500 py-1 text-[10px] font-mono tracking-widest transition uppercase">
+                    EXECUTE_66
+                </button>
             </div>
         </div>
+    </div>
+
+    <!-- 6. CORE DIAGNOSTICS (Span 2) -->
+    <div class="bento-card col-span-1 md:col-span-4 lg:col-span-2 row-span-1 flex flex-col p-6 border border-blue-500/20 shadow-[0_0_20px_rgba(0,100,255,0.05)]">
+        <div class="flex items-center gap-3 text-blue-400 mb-4">
+            <i class="bi bi-activity text-xl"></i>
+            <div>
+                 <h2 class="font-bold text-sm tracking-widest text-white">CORE DIAGNOSTICS</h2>
+                 <div class="text-[10px] text-blue-500 font-mono">SYSTEM CALIBRATION MODULE</div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 flex-grow">
+            <!-- Button 1: Content -->
+            <button onclick="runDiagnostic('content')" class="bg-blue-900/10 hover:bg-blue-500/20 border border-blue-500/30 text-blue-300 hover:text-white p-2 rounded flex flex-col items-center justify-center gap-1 transition group">
+                <i class="bi bi-terminal text-lg group-hover:scale-110 transition"></i>
+                <span class="text-[10px] font-mono tracking-widest">TEST CONTENT</span>
+            </button>
+
+            <!-- Button 2: JSON -->
+            <button onclick="runDiagnostic('json')" class="bg-blue-900/10 hover:bg-cyan-500/20 border border-cyan-500/30 text-cyan-300 hover:text-white p-2 rounded flex flex-col items-center justify-center gap-1 transition group">
+                <i class="bi bi-code-square text-lg group-hover:scale-110 transition"></i>
+                 <span class="text-[10px] font-mono tracking-widest">DATA STREAM</span>
+            </button>
+
+            <!-- Button 3: Redirect -->
+            <button onclick="runDiagnostic('redirect')" class="bg-blue-900/10 hover:bg-yellow-500/20 border border-yellow-500/30 text-yellow-300 hover:text-white p-2 rounded flex flex-col items-center justify-center gap-1 transition group">
+                <i class="bi bi-arrow-repeat text-lg group-hover:rotate-180 transition duration-500"></i>
+                 <span class="text-[10px] font-mono tracking-widest">REROUTE</span>
+            </button>
+
+            <!-- Button 4: Image View -->
+            <button onclick="window.open('/Calibration/ViewImage', '_blank')" class="bg-blue-900/10 hover:bg-pink-500/20 border border-pink-500/30 text-pink-300 hover:text-white p-2 rounded flex flex-col items-center justify-center gap-1 transition group">
+                <i class="bi bi-eye text-lg group-hover:scale-110 transition"></i>
+                 <span class="text-[10px] font-mono tracking-widest">VISUAL SENSOR</span>
+            </button>
+
+            <!-- Button 5: Image Download (Span 2) -->
+            <button onclick="window.location.href='/Calibration/DownloadAsset?fileName=ai-la-gi-cong-dung-cua-ai.jpg'" class="col-span-2 bg-blue-900/10 hover:bg-green-500/20 border border-t-2 border-dashed border-green-500/30 text-green-300 hover:text-white p-2 rounded flex flex-col items-center justify-center gap-1 transition group hover:shadow-[0_0_15px_rgba(0,255,100,0.2)]">
+                <i class="bi bi-download text-lg group-hover:translate-y-1 transition"></i>
+                 <span class="text-[10px] font-mono tracking-widest">EXTRACT DATA</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- DIAGNOSTIC MODAL -->
+<div id="diag-modal" class="fixed inset-0 z-[200] flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-300">
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeModal()"></div>
+    <div class="relative bg-[#050510] border border-cyan-500/50 shadow-[0_0_50px_rgba(0,240,255,0.2)] w-full max-w-lg mx-4 p-6 rounded-xl transform scale-95 transition-transform duration-300 pointer-events-auto" id="diag-modal-content">
+        <!-- Close -->
+        <button onclick="closeModal()" class="absolute top-4 right-4 text-cyan-500 hover:text-white"><i class="bi bi-x-lg"></i></button>
+        
+        <!-- Header -->
+        <div class="flex items-center gap-3 mb-4 border-b border-cyan-500/20 pb-2">
+            <i class="bi bi-cpu text-cyan-400"></i>
+            <h3 class="text-white font-bold tracking-widest">DIAGNOSTIC REPORT</h3>
+        </div>
+
+        <!-- Body -->
+        <div id="diag-body" class="font-mono text-sm text-cyan-100 min-h-[100px] max-h-[400px] overflow-y-auto whitespace-pre-wrap">
+            <!-- Content Injected Here -->
+        </div>
+
+        <!-- Decor -->
+        <div class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-50"></div>
     </div>
 </div>

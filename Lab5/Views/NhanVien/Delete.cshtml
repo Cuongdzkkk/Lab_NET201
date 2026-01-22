@@ -1,0 +1,61 @@
+@model Lab5.Models.NhanVien
+
+@{
+    ViewData["Title"] = "Delete NhanVien";
+}
+
+<h1>Xóa Nhân Viên</h1>
+
+<div class="alert alert-warning">
+    <h4>Bạn có chắc chắn muốn xóa nhân viên này?</h4>
+</div>
+
+<div class="card">
+    <div class="card-header bg-danger text-white">
+        <h5>Thông Tin Nhân Viên</h5>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Mã NV</dt>
+            <dd class="col-sm-9">@Model.MaNV</dd>
+            
+            <dt class="col-sm-3">Họ Tên</dt>
+            <dd class="col-sm-9">@Model.HoNV @Model.TenLot @Model.TenNV</dd>
+            
+            <dt class="col-sm-3">Phái</dt>
+            <dd class="col-sm-9">@Model.Phai</dd>
+            
+            <dt class="col-sm-3">Địa Chỉ</dt>
+            <dd class="col-sm-9">@Model.DChi</dd>
+            
+            <dt class="col-sm-3">Lương</dt>
+            <dd class="col-sm-9">@Model.Luong.ToString("N0") VNĐ</dd>
+            
+            <dt class="col-sm-3">Ngày Sinh</dt>
+            <dd class="col-sm-9">@Model.NgaySinh.ToShortDateString()</dd>
+            
+            <dt class="col-sm-3">Phòng Ban</dt>
+            <dd class="col-sm-9">@Model.PHG</dd>
+            
+            <dt class="col-sm-3">Mã NQL</dt>
+            <dd class="col-sm-9">@Model.Ma_NQL</dd>
+        </dl>
+        
+        @if (Model.ThanNhans != null && Model.ThanNhans.Any())
+        {
+            <div class="alert alert-danger">
+                <strong>Cảnh báo:</strong> Xóa nhân viên này sẽ xóa <strong>@Model.ThanNhans.Count</strong> thân nhân liên quan!
+            </div>
+        }
+    </div>
+</div>
+
+<form asp-action="Delete" class="mt-3">
+    <input type="hidden" asp-for="MaNV" />
+    <button type="submit" class="btn btn-danger">
+        <i class="fas fa-trash"></i> Xác Nhận Xóa
+    </button>
+    <a asp-action="Index" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Hủy
+    </a>
+</form>

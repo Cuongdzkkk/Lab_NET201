@@ -1,0 +1,41 @@
+@model Lab6.Models.Student
+
+@{
+    ViewData["Title"] = "Xóa Sinh viên";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="alert alert-danger">
+    <h4>Bạn có chắc chắn muốn xóa sinh viên này?</h4>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.StudentName)</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.StudentName)</dd>
+
+            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Email)</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.Email)</dd>
+
+            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.PhoneNumber)</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.PhoneNumber)</dd>
+
+            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.DateOfBirth)</dt>
+            <dd class="col-sm-9">@Model.DateOfBirth.ToString("dd/MM/yyyy")</dd>
+
+            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Address)</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.Address)</dd>
+
+            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.GPA)</dt>
+            <dd class="col-sm-9">@Model.GPA.ToString("N2")</dd>
+        </dl>
+
+        <form asp-action="Delete" method="post">
+            <input type="hidden" asp-for="StudentId" />
+            <button type="submit" class="btn btn-danger">Xác nhận Xóa</button>
+            <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+        </form>
+    </div>
+</div>

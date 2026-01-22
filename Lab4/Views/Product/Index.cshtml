@@ -1,0 +1,103 @@
+@model List<Product>
+
+<h3>Product List</h3>
+
+<!-- 🔍 ADVANCED FILTERING SECTION -->
+<div class="glass-card mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="m-0">🔍 Admin Management Filter</h4>
+        <a href="@Url.Action("Gallery")" class="btn btn-outline-info btn-sm">👁️ Switch to Gallery View</a>
+    </div>
+    
+    <form method="get" asp-action="Index" class="row g-3 align-items-end">
+        <!-- Search Text -->
+        <div class="col-md-4">
+            <label class="form-label text-light fw-bold">Smart Search:</label>
+            <input type="text" name="searchText" value="@ViewBag.CurrentSearchText" class="form-control" placeholder="e.g. Dell Gaming..." />
+        </div>
+
+        <!-- Quantity Range -->
+        <div class="col-md-3">
+            <label class="form-label text-light fw-bold">Stock Level:</label>
+            <select name="quantityRange" class="form-select">
+                <option value="">-- All Levels --</option>
+                <option value="1-10" selected="@(ViewBag.CurrentQuantityRange == "1-10" ? "selected" : null)">1 - 10</option>
+                <option value="10-30" selected="@(ViewBag.CurrentQuantityRange == "10-30" ? "selected" : null)">10 - 30</option>
+                <option value="30-40" selected="@(ViewBag.CurrentQuantityRange == "30-40" ? "selected" : null)">30 - 40</option>
+                <option value="40+" selected="@(ViewBag.CurrentQuantityRange == "40+" ? "selected" : null)">Over 40</option>
+            </select>
+        </div>
+
+        <!-- Price Range -->
+        <div class="col-md-3">
+            <label class="form-label text-light fw-bold">Price Range:</label>
+            <select name="priceRange" class="form-select">
+                <option value="">-- All Prices --</option>
+                <option value="10k-50k" selected="@(ViewBag.CurrentPriceRange == "10k-50k" ? "selected" : null)">10k - 50k</option>
+                <option value="50k-500k" selected="@(ViewBag.CurrentPriceRange == "50k-500k" ? "selected" : null)">50k - 500k</option>
+                <option value="500k+" selected="@(ViewBag.CurrentPriceRange == "500k+" ? "selected" : null)">Over 500k</option>
+            </select>
+        </div>
+
+        <!-- Buttons -->
+        <div class="col-md-2 d-grid gap-2">
+            <button type="submit" class="btn btn-primary fw-bold">Apply</button>
+            <a href="@Url.Action("Index")" class="btn btn-secondary btn-sm">Clear</a>
+        </div>
+    </form>
+</div>
+
+<a asp-action="Create" style="display: inline-block; padding: 10px 20px; background: #28a745; color: white; text-decoration: none; border-radius: 4px; margin-bottom: 15px; font-weight: bold;">➕ Create New Product</a>
+
+<table border="1" cellpadding="5" style="width: 100%; border-collapse: collapse;">
+    <tr style="background: #343a40; color: white;">
+        <th>Image</th>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Qty</th>
+        <th>Status</th>
+        <th>Action</th>
+    </tr>
+
+@foreach (var p in Model)
+{
+    <tr>
+        <td>
+            @if (!string.IsNullOrEmpty(p.ImagePath))
+            {
+                <img src="@p.ImagePath" alt="@p.Name" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;" />
+            }
+            else
+            {
+                <span style="color: #999;">No image</span>
+            }
+        </td>
+        <th>@p.Id</th>
+        <td>@p.Name</td>
+        <td>@p.Price?.ToString("N0")</td>
+        <td>@p.Quantity</td>
+        <td>
+            @if (p.Status == true)
+            {
+                <span style="color: green; font-weight: bold;">✓ Active</span>
+            }
+            else
+            {
+                <span style="color: red;">✗ Inactive</span>
+            }
+        </td>
+        <td>
+            <a asp-action="Edit" asp-route-id="@p.Id" style="color: #007bff; text-decoration: none; margin-right: 10px;">✏️ Edit</a>
+            <a asp-action="Delete" asp-route-id="@p.Id" style="color: #dc3545; text-decoration: none;">🗑️ Delete</a>
+        </td>
+    </tr>
+}
+</table>
+
+@if (Model.Count == 0)
+{
+    <p style="text-align: center; padding: 20px; color: #999; font-style: italic;">No products found matching your filters.</p>
+}
+
+

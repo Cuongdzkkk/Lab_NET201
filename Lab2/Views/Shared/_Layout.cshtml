@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - NEXUS LAB</title>
+    
+    <!-- FONTS -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    
+    <!-- THREE.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    
+    <!-- SYSTEM LOADER -->
+    <div id="loading-overlay" class="active">
+        <div class="loader-spinner"></div>
+        <div class="loader-text">PROCESSING DATA STREAM...</div>
+    </div>
+
+    <!-- BACKGROUND ENGINE -->
+    <div id="canvas-container"></div>
+
+    <!-- MAIN CONTENT -->
+    <div class="app-container">
+        @RenderBody()
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

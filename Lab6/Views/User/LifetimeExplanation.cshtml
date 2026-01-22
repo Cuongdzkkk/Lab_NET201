@@ -1,0 +1,194 @@
+@{
+    ViewData["Title"] = "Giải thích DI Lifetime";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="alert alert-primary">
+            <h4>🎯 Dependency Injection Lifetime trong ASP.NET Core</h4>
+            <p class="mb-0">
+                ASP.NET Core cung cấp 3 loại lifetime cho Dependency Injection: 
+                <strong>Transient</strong>, <strong>Scoped</strong>, và <strong>Singleton</strong>
+            </p>
+        </div>
+
+        <!-- Transient -->
+        <div class="card mb-4 border-danger">
+            <div class="card-header bg-danger text-white">
+                <h3 class="mb-0">1️⃣ Transient Lifetime</h3>
+            </div>
+            <div class="card-body">
+                <h5>📌 Đặc điểm:</h5>
+                <ul>
+                    <li>Tạo instance <strong>MỚI</strong> mỗi lần service được inject</li>
+                    <li>Mỗi lần DI container resolve service, sẽ tạo một object mới</li>
+                    <li>Lightweight services, không giữ state</li>
+                </ul>
+
+                <h5>💡 Ví dụ trong Lab:</h5>
+                <pre class="bg-light p-3"><code>builder.Services.AddTransient&lt;IEmailService, EmailService&gt;();</code></pre>
+
+                <div class="alert alert-warning">
+                    <strong>Kết quả quan sát:</strong>
+                    <ul class="mb-0">
+                        <li><code>EmailService1Id</code> ≠ <code>EmailService2Id</code></li>
+                        <li>Dù cùng inject vào 1 controller, nhưng vì là Transient nên có 2 instance khác nhau</li>
+                        <li>Mỗi lần refresh trang, cả 2 ID đều thay đổi</li>
+                    </ul>
+                </div>
+
+                <h5>✅ Khi nào dùng Transient?</h5>
+                <ul class="mb-0">
+                    <li>Services stateless, không lưu trữ dữ liệu</li>
+                    <li>Services nhẹ, tạo nhanh</li>
+                    <li>Ví dụ: EmailService, NotificationService, HelperService</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Scoped -->
+        <div class="card mb-4 border-warning">
+            <div class="card-header bg-warning text-dark">
+                <h3 class="mb-0">2️⃣ Scoped Lifetime</h3>
+            </div>
+            <div class="card-body">
+                <h5>📌 Đặc điểm:</h5>
+                <ul>
+                    <li>Tạo instance mới cho mỗi <strong>request (scope)</strong></li>
+                    <li>Trong cùng 1 request, tất cả các lần inject sẽ dùng chung 1 instance</li>
+                    <li>Request khác nhau → instance khác nhau</li>
+                </ul>
+
+                <h5>💡 Ví dụ trong Lab:</h5>
+                <pre class="bg-light p-3"><code>builder.Services.AddScoped&lt;IUserService, UserService&gt;();</code></pre>
+
+                <div class="alert alert-warning">
+                    <strong>Kết quả quan sát:</strong>
+                    <ul class="mb-0">
+                        <li><code>UserServiceId</code> giống nhau trong cùng 1 lần load trang</li>
+                        <li>Khi refresh (F5) → request mới → <code>UserServiceId</code> thay đổi</li>
+                        <li>Mở nhiều tab → mỗi tab có request riêng → ServiceId khác nhau giữa các tab</li>
+                    </ul>
+                </div>
+
+                <h5>✅ Khi nào dùng Scoped?</h5>
+                <ul class="mb-0">
+                    <li><strong>DbContext</strong> (khuyến nghị từ Microsoft)</li>
+                    <li>Services cần maintain state trong 1 request</li>
+                    <li>Repository pattern, Unit of Work</li>
+                    <li>Ví dụ: UserService, ShoppingCartService (trong 1 request)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Singleton -->
+        <div class="card mb-4 border-success">
+            <div class="card-header bg-success text-white">
+                <h3 class="mb-0">3️⃣ Singleton Lifetime</h3>
+            </div>
+            <div class="card-body">
+                <h5>📌 Đặc điểm:</h5>
+                <ul>
+                    <li>Tạo <strong>DUY NHẤT 1 instance</strong> suốt application lifetime</li>
+                    <li>Instance được tạo lần đầu tiên khi app khởi động (hoặc lần đầu request)</li>
+                    <li>Tất cả requests, tất cả users đều dùng chung instance này</li>
+                </ul>
+
+                <h5>💡 Ví dụ trong Lab:</h5>
+                <pre class="bg-light p-3"><code>builder.Services.AddSingleton&lt;ILoggingService, LoggingService&gt;();</code></pre>
+
+                <div class="alert alert-warning">
+                    <strong>Kết quả quan sát:</strong>
+                    <ul class="mb-0">
+                        <li><code>LoggingServiceId</code> <strong>KHÔNG BAO GIỜ THAY ĐỔI</strong></li>
+                        <li>Dù refresh bao nhiêu lần, ID vẫn giữ nguyên</li>
+                        <li>Logs được tích lũy qua các request (state được giữ lại)</li>
+                        <li>Chỉ thay đổi khi restart application</li>
+                    </ul>
+                </div>
+
+                <h5>✅ Khi nào dùng Singleton?</h5>
+                <ul class="mb-0">
+                    <li>Services cần share state giữa toàn bộ app</li>
+                    <li>Services tốn tài nguyên để khởi tạo</li>
+                    <li>Configuration services, Caching services</li>
+                    <li>Logging services, Monitoring services</li>
+                    <li>Ví dụ: LoggingService, CacheService, ConfigurationService</li>
+                </ul>
+
+                <div class="alert alert-danger">
+                    <strong>⚠️ Lưu ý:</strong>
+                    <ul class="mb-0">
+                        <li>Singleton phải thread-safe (an toàn đa luồng)</li>
+                        <li>Không inject Scoped service vào Singleton (sẽ gây lỗi)</li>
+                        <li>Cẩn thận với memory leaks vì object tồn tại suốt app lifetime</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparison Table -->
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h3 class="mb-0">📊 Bảng so sánh</h3>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Đặc điểm</th>
+                            <th>Transient</th>
+                            <th>Scoped</th>
+                            <th>Singleton</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Thời gian sống</strong></td>
+                            <td>Mỗi lần inject</td>
+                            <td>Mỗi request</td>
+                            <td>Toàn bộ app</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Số instance</strong></td>
+                            <td>Nhiều</td>
+                            <td>1 per request</td>
+                            <td>Duy nhất 1</td>
+                        </tr>
+                        <tr>
+                            <td><strong>State</strong></td>
+                            <td>Không giữ state</td>
+                            <td>Giữ trong request</td>
+                            <td>Giữ suốt app</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Thread-safe</strong></td>
+                            <td>Không cần</td>
+                            <td>Không cần</td>
+                            <td>BẮT BUỘC</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Memory</strong></td>
+                            <td>Nhẹ nhất</td>
+                            <td>Trung bình</td>
+                            <td>Nặng nhất</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ví dụ</strong></td>
+                            <td>EmailService</td>
+                            <td>DbContext, UserService</td>
+                            <td>LoggingService</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Back Button -->
+        <div class="text-center">
+            <a asp-action="Index" class="btn btn-primary btn-lg">← Quay lại Demo</a>
+        </div>
+    </div>
+</div>

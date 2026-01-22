@@ -1,0 +1,134 @@
+@model List<Product>
+
+@{
+    ViewData["Title"] = "Product Gallery";
+}
+
+<div class="text-center mb-5">
+    <h1 class="display-4 fw-bold" style="background: linear-gradient(to right, #00f260, #0575E6); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+        ✨ Product Gallery
+    </h1>
+    <p class="lead text-light">Explore our premium collection in Antigravity</p>
+</div>
+
+<!-- 🔍 ADVANCED FILTERING SECTION (REUSED FOR CONSISTENCY) -->
+<div class="glass-card mb-5">
+    <h4 class="mb-3">🔍 Find Your Gear</h4>
+    
+    <form method="get" asp-action="Gallery" class="row g-3 align-items-end">
+        <!-- Search Text -->
+        <div class="col-md-4">
+            <label class="form-label fw-bold">Smart Search:</label>
+            <input type="text" name="searchText" value="@ViewBag.CurrentSearchText" class="form-control" placeholder="e.g. Dell Gaming..." />
+        </div>
+
+        <!-- Quantity Range -->
+        <div class="col-md-3">
+            <label class="form-label fw-bold">Availability:</label>
+            <select name="quantityRange" class="form-select">
+                <option value="">-- All Stock Levels --</option>
+                <option value="1-10" selected="@(ViewBag.CurrentQuantityRange == "1-10" ? "selected" : null)">Critically Low (1-10)</option>
+                <option value="10-30" selected="@(ViewBag.CurrentQuantityRange == "10-30" ? "selected" : null)">Low Stock (10-30)</option>
+                <option value="30-40" selected="@(ViewBag.CurrentQuantityRange == "30-40" ? "selected" : null)">Medium Stock (30-40)</option>
+                <option value="40+" selected="@(ViewBag.CurrentQuantityRange == "40+" ? "selected" : null)">High Stock (40+)</option>
+            </select>
+        </div>
+
+        <!-- Price Range -->
+        <div class="col-md-3">
+            <label class="form-label fw-bold">Price Range:</label>
+            <select name="priceRange" class="form-select">
+                <option value="">-- All Budgets --</option>
+                <option value="10k-50k" selected="@(ViewBag.CurrentPriceRange == "10k-50k" ? "selected" : null)">Budget (10k - 50k)</option>
+                <option value="50k-500k" selected="@(ViewBag.CurrentPriceRange == "50k-500k" ? "selected" : null)">Mid-Range (50k - 500k)</option>
+                <option value="500k+" selected="@(ViewBag.CurrentPriceRange == "500k+" ? "selected" : null)">Premium (> 500k)</option>
+            </select>
+        </div>
+
+        <!-- Buttons -->
+        <div class="col-md-2 d-grid gap-2">
+            <button type="submit" class="btn btn-primary fw-bold">🚀 Filter</button>
+            <a href="@Url.Action("Gallery")" class="btn btn-outline-light btn-sm">Clear</a>
+        </div>
+    </form>
+</div>
+
+<!-- 🛍️ PRODUCT GALLRY GRID -->
+@if (Model.Count > 0)
+{
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
+        @foreach (var p in Model)
+        {
+            <div class="col">
+                <div class="glass-card h-100 product-card position-relative overflow-hidden" style="padding: 0; border: 1px solid rgba(255,255,255,0.1);">
+                    
+                    <!-- Image Section -->
+                    <div style="height: 200px; background: #000; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                        @if (!string.IsNullOrEmpty(p.ImagePath))
+                        {
+                            <img src="@p.ImagePath" alt="@p.Name" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease;" />
+                        }
+                        else
+                        {
+                            <div class="text-muted text-center">
+                                <span style="font-size: 3rem;">📷</span>
+                                <p class="small m-0">No Preview</p>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Content Section -->
+                    <div class="p-3">
+                        <h5 class="card-title fw-bold text-truncate" title="@p.Name" style="color: var(--neon-cyan);">@p.Name</h5>
+                        
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge bg-dark border border-secondary text-light">ID: @p.Id</span>
+                            @if (p.Status == true)
+                            {
+                                <span class="badge" style="background-color: var(--neon-purple);">Active</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Inactive</span>
+                            }
+                        </div>
+
+                        <h4 class="fw-bold my-2" style="color: #00f260;">
+                            @(p.Price?.ToString("N0") ?? "0") ₫
+                        </h4>
+
+                        <p class="small text-muted mb-3">
+                            In Stock: <span class="text-white">@p.Quantity</span> units
+                        </p>
+
+                        <button class="btn btn-primary w-100 neon-glow">
+                            🛒 Add to Cart
+                        </button>
+                    </div>
+
+                    <!-- Hover Overlay Effect -->
+                    <div class="card-overlay"></div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="text-center py-5">
+        <h3 class="text-muted">🛸 No products found in this sector.</h3>
+        <a asp-action="Gallery" class="btn btn-outline-light mt-3">Reset Sensors</a>
+    </div>
+}
+
+<style>
+    /* Specific Gallery Styles */
+    .product-card img:hover {
+        transform: scale(1.1);
+    }
+    
+    .product-card:hover {
+        border-color: var(--neon-cyan);
+        box-shadow: 0 0 25px rgba(6, 182, 212, 0.3);
+    }
+</style>

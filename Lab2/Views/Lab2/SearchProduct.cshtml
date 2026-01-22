@@ -1,0 +1,64 @@
+@model IEnumerable<Lab2.Models.Product>
+
+@{
+    ViewData["Title"] = "Search Protocol";
+    var searchModel = ViewBag.SearchModel as Lab2.Models.ProductSearchModel;
+}
+
+<div class="bento-card">
+    <div class="flex-between mb-2">
+        <h2>SEARCH PROTOCOL</h2>
+        <a asp-action="Index" class="btn btn-cyan" style="border-style:dashed;">[ RETURN TO DECK ]</a>
+    </div>
+
+    <!-- Search Form -->
+    <form method="get" style="margin-bottom: 3rem;">
+        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 1.5rem; align-items: end;">
+            <div>
+                 <label class="form-label">KEYWORD</label>
+                 <input type="text" name="Name" class="form-control" value="@searchModel?.Name" placeholder="ENTER TERM..." />
+            </div>
+            <div>
+                 <label class="form-label">MIN VAL</label>
+                 <input type="number" name="MinPrice" class="form-control" value="@searchModel?.MinPrice" placeholder="0.00" />
+            </div>
+            <div>
+                 <label class="form-label">MAX VAL</label>
+                 <input type="number" name="MaxPrice" class="form-control" value="@searchModel?.MaxPrice" placeholder="0.00" />
+            </div>
+            <button type="submit" class="btn btn-cyan" style="height: 50px;">INIT SCAN</button>
+        </div>
+    </form>
+
+    <!-- Results or Alert -->
+    @if(Model != null && Model.Any())
+    {
+        <table class="tech-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>ITEM NAME</th>
+                    <th>PRICE</th>
+                    <th>STATUS</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Id</td>
+                        <td style="color:#fff; font-weight:bold;">@item.Name</td>
+                        <td class="text-neon">@item.Price.ToString("C")</td>
+                        <td>AVAILABLE</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert-cyber">
+            ⚠️ SIGNAL VOID: NO DATA FOUND FOR THIS QUERY
+        </div>
+    }
+</div>

@@ -1,0 +1,44 @@
+@model Lab3.Models.Product
+
+@{
+    ViewData["Title"] = "Specs";
+}
+
+<div class="details-container">
+    <div class="details-visual">
+        <img src="@(string.IsNullOrEmpty(Model.ImageUrl) ? "https://placehold.co/600x600/1c1c1c/FFF?text=ASSET" : Model.ImageUrl)" class="details-img" />
+    </div>
+    
+    <div class="details-spec">
+        <div class="spec-header">
+            <span class="mono" style="font-size: 0.8rem; border: 1px solid var(--text-main); padding: 4px 8px;">REF_ID: @Model.ProductId</span>
+            <h1 class="spec-title" style="margin-top: 24px;">@Model.Name</h1>
+            <span class="spec-price">@Model.UnitPrice.ToString("C0")</span>
+        </div>
+
+        <div class="spec-body" style="margin-bottom: 40px;">
+            <div class="spec-row">
+                <span class="text-muted">CATEGORY //</span>
+                <span>@Model.Category</span>
+            </div>
+            <div class="spec-row">
+                <span class="text-muted">COLOR //</span>
+                <span>@Model.Color</span>
+            </div>
+            <div class="spec-row">
+                <span class="text-muted">STOCK STATUS //</span>
+                <span>AVAILABLE (@Model.AvailableQuantity)</span>
+            </div>
+        </div>
+
+        <div class="spec-actions">
+            <!-- Add to Cart Logic would go here, currently just visual visual links -->
+            <a href="#" class="btn-analog" style="width: 100%; text-align: center; margin-bottom: 16px;">ACQUIRE ASSET</a>
+            
+            <div style="display: flex; gap: 16px;">
+                <a asp-action="Edit" asp-route-id="@Model.ProductId" class="btn-outline" style="flex: 1; padding: 12px; text-align: center; text-decoration: none;">EDIT DATA</a>
+                <a asp-action="Shop" class="btn-outline" style="flex: 1; padding: 12px; text-align: center; text-decoration: none;">BACK TO INDEX</a>
+            </div>
+        </div>
+    </div>
+</div>

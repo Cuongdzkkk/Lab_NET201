@@ -1,0 +1,26 @@
+@model Lab5.Models.Course
+
+@{
+    ViewData["Title"] = "Course Details";
+}
+
+<h1>Course: @Model.Name</h1>
+
+<h3>Registered Students</h3>
+@if (Model.StudentCourses != null && Model.StudentCourses.Any())
+{
+    <ul>
+        @foreach (var sc in Model.StudentCourses)
+        {
+            <li>@sc.Student.FirstName @sc.Student.LastName</li>
+        }
+    </ul>
+}
+else
+{
+    <p>No students registered.</p>
+}
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

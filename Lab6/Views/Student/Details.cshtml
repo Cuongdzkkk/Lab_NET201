@@ -1,0 +1,64 @@
+@model Lab6.Models.Student
+
+@{
+    ViewData["Title"] = "Chi tiết Sinh viên";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="card">
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.StudentId)</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.StudentId)</dd>
+
+            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.StudentName)</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.StudentName)</dd>
+
+            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Email)</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.Email)</dd>
+
+            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.PhoneNumber)</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.PhoneNumber)</dd>
+
+            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.DateOfBirth)</dt>
+            <dd class="col-sm-9">@Model.DateOfBirth.ToString("dd/MM/yyyy")</dd>
+
+            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Address)</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.Address)</dd>
+
+            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.GPA)</dt>
+            <dd class="col-sm-9">@Model.GPA.ToString("N2")</dd>
+        </dl>
+
+        <div class="mt-3">
+            <a asp-action="Edit" asp-route-id="@Model.StudentId" class="btn btn-warning">Sửa</a>
+            <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+        </div>
+
+        @if (Model.Enrollments.Any())
+        {
+            <hr />
+            <h4 class="mt-4">Khóa học đã đăng ký</h4>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Khóa học</th>
+                        <th>Ngày đăng ký</th>
+                        <th>Điểm</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var enrollment in Model.Enrollments)
+                    {
+                        <tr>
+                            <td>@enrollment.Course?.CourseName</td>
+                            <td>@enrollment.EnrollmentDate.ToString("dd/MM/yyyy")</td>
+                            <td>@enrollment.Grade</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>

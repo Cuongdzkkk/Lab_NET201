@@ -1,0 +1,80 @@
+@model Lab3.Models.Product
+
+@{
+    ViewData["Title"] = "New Asset";
+}
+
+<div style="max-width: 800px; margin: 0 auto; padding: 80px var(--page-padding);">
+    
+    <!-- TERMINAL INPUT CONSOLE (FAST TRACK) -->
+    <div style="margin-bottom: 60px; border-bottom: 2px dashed var(--border-color); padding-bottom: 40px;">
+        <h2 class="mono" style="font-size: 0.9rem; color: var(--accent-olive); margin-bottom: 16px;">// QUICK_INPUT_CONSOLE</h2>
+        <form asp-action="QuickCreate" method="post">
+             <div class="terminal-input-wrapper">
+                 <span class="mono" style="margin-right: 12px; color: var(--text-muted);">&gt;_</span>
+                 <input type="text" name="product" class="terminal-input" placeholder="TYPE_DATA: [Name]-[Category]-[Price]" autocomplete="off" />
+                 <button type="submit" class="btn-console">[ENTER]</button>
+             </div>
+        </form>
+    </div>
+
+    <!-- MAIN FORM (MANUAL) -->
+    <h2 class="serif" style="font-size: 3rem; margin-bottom: 40px;">Input New Asset_</h2>
+    
+    <form asp-action="Create" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        
+        <div class="form-group-analog">
+            <label asp-for="Name" class="form-label">IDENTIFIER //</label>
+            <input asp-for="Name" class="form-input-analog" placeholder="Enter product name..." />
+            <span asp-validation-for="Name" class="text-danger mono" style="font-size: 0.7rem;"></span>
+        </div>
+
+        <div class="form-group-analog">
+            <label asp-for="Category" class="form-label">CATEGORY //</label>
+            <input asp-for="Category" class="form-input-analog" placeholder="Enter category..." />
+            <span asp-validation-for="Category" class="text-danger mono" style="font-size: 0.7rem;"></span>
+        </div>
+
+        <div class="form-group-analog">
+            <label asp-for="Color" class="form-label">COLOR //</label>
+            <input asp-for="Color" class="form-input-analog" placeholder="Enter color..." />
+            <span asp-validation-for="Color" class="text-danger mono" style="font-size: 0.7rem;"></span>
+        </div>
+
+        <div class="form-group-analog">
+            <label asp-for="UnitPrice" class="form-label">VALUE //</label>
+            <input asp-for="UnitPrice" class="form-input-analog" placeholder="0.00" />
+            <span asp-validation-for="UnitPrice" class="text-danger mono" style="font-size: 0.7rem;"></span>
+        </div>
+        
+        <div class="form-group-analog">
+            <label asp-for="AvailableQuantity" class="form-label">QUANTITY //</label>
+            <input asp-for="AvailableQuantity" class="form-input-analog" placeholder="0" />
+            <span asp-validation-for="AvailableQuantity" class="text-danger mono" style="font-size: 0.7rem;"></span>
+        </div>
+
+        <!-- FILM LOADING SLOT (IMAGE UPLOAD) -->
+        <div class="form-group-analog" style="align-items: flex-start;">
+            <label class="form-label">VISUAL SOURCE //</label>
+            <div class="file-loading-slot">
+                <input type="file" name="imageFile" id="imageFile" class="file-input-hidden" onchange="document.getElementById('fileNameDisplay').innerText = this.files[0].name" />
+                <label for="imageFile" class="file-label-visual">
+                    <span class="mono">[ DRIVE EMPTY - CLICK TO LOAD ]</span>
+                    <span id="fileNameDisplay" class="mono accent-clay" style="display: block; margin-top: 8px;"></span>
+                </label>
+            </div>
+            <!-- Hidden input for manual URL fallback if needed -->
+            <input type="hidden" asp-for="ImageUrl" /> 
+        </div>
+
+        <div style="margin-top: 60px; display: flex; gap: 24px;">
+            <input type="submit" value="[ EXECUTE UPLOAD ]" class="btn-analog" />
+            <a asp-action="Index" class="btn-outline" style="padding: 16px 32px; text-decoration: none;">CANCEL</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

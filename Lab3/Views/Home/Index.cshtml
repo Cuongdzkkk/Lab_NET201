@@ -1,0 +1,24 @@
+@{
+    ViewData["Title"] = "Gallery";
+}
+
+<div class="home-layout">
+    <div class="home-hero">
+        <h1 class="home-title">
+            Capturing Moments.<br/>
+            <span class="accent-olive">Sustainably.</span>
+        </h1>
+    </div>
+
+    <div class="home-cards">
+        <a asp-controller="Product" asp-action="Shop" class="nav-card">
+            <h2>The Gallery</h2>
+            <span class="mono">[BROWSE CATALOG_]</span>
+            <!-- Background img could act as hover reveal here -->
+        </a>
+        <a asp-controller="Product" asp-action="Create" class="nav-card">
+            <h2>The Darkroom</h2>
+            <span class="mono">[MANAGE ASSETS_]</span>
+        </a>
+    </div>
+</div>

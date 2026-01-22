@@ -1,0 +1,54 @@
+@model Lab5.Models.Course
+
+@{
+    ViewData["Title"] = "Delete Course";
+}
+
+<h1>Xóa Môn Học</h1>
+
+<div class="alert alert-warning">
+    <h4>Bạn có chắc chắn muốn xóa môn học này?</h4>
+</div>
+
+<div class="card">
+    <div class="card-header bg-danger text-white">
+        <h5>Thông Tin Môn Học</h5>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Course ID</dt>
+            <dd class="col-sm-9">@Model.Id</dd>
+            
+            <dt class="col-sm-3">Course Name</dt>
+            <dd class="col-sm-9">@Model.Name</dd>
+            
+            <dt class="col-sm-3">Start Date</dt>
+            <dd class="col-sm-9">@Model.StartDate.ToShortDateString()</dd>
+        </dl>
+        
+        @if (Model.CourseDetails != null)
+        {
+            <div class="alert alert-danger">
+                <strong>Cảnh báo:</strong> CourseDetails sẽ bị xóa cùng (cascade delete)!
+            </div>
+        }
+        
+        @if (Model.StudentCourses != null && Model.StudentCourses.Any())
+        {
+            <div class="alert alert-danger">
+                <strong>Cảnh báo:</strong> Có @Model.StudentCourses.Count sinh viên đang học môn này!
+            </div>
+        }
+    </div>
+</div>
+
+<form asp-action="Delete" method="post" class="mt-3">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">
+        <i class="fas fa-trash"></i> Xác Nhận Xóa
+    </button>
+    <a asp-action="Index" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Hủy
+    </a>
+</form>

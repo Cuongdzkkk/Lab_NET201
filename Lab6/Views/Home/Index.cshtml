@@ -1,0 +1,204 @@
+﻿@{
+    ViewData["Title"] = "Lab 06 Overview";
+}
+
+<!-- GOOGLE BENTO GRID STYLES -->
+<style>
+    /* UTILITIES */
+    :root {
+        --bento-gap: 24px;
+        --card-radius: 28px;
+        --card-bg: #FFFFFF;
+        --card-shadow: 0 4px 24px rgba(0,0,0,0.06);
+        --card-hover-shadow: 0 12px 48px rgba(0,0,0,0.12);
+    }
+    
+    .text-google-blue { color: #4285F4; }
+    .text-google-green { color: #34A853; }
+    .text-google-red { color: #EA4335; }
+    .text-google-yellow { color: #FBBC05; }
+    .text-secondary-dark { color: #5f6368; }
+
+    /* GRID CONTAINER */
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-auto-rows: minmax(180px, auto); /* Standard row height */
+        gap: var(--bento-gap);
+        margin-top: 40px;
+        max-width: 1400px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* CARD BASE STYLE */
+    .bento-box {
+        background-color: var(--card-bg);
+        border-radius: var(--card-radius);
+        box-shadow: var(--card-shadow);
+        padding: 32px;
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease;
+        text-decoration: none; /* For links */
+        display: flex;
+        flex-direction: column;
+        color: var(--text-dark);
+        border: 1px solid rgba(0,0,0,0.02);
+    }
+
+    .bento-box:hover {
+        transform: scale(1.02);
+        box-shadow: var(--card-hover-shadow);
+        z-index: 5;
+    }
+
+    /* TYPOGRAPHY IN CARDS */
+    .bento-title {
+        font-family: 'Google Sans', 'Outfit', sans-serif;
+        font-weight: 700;
+        font-size: 1.5rem;
+        margin-bottom: 8px;
+        color: #202124;
+    }
+    
+    .bento-subtitle {
+        font-size: 0.95rem;
+        color: var(--text-secondary-dark);
+        font-weight: 400;
+    }
+
+    .big-icon {
+        font-size: 3rem;
+        margin-bottom: 20px;
+    }
+
+    /* SPAN UTILITIES */
+    .span-2 { grid-column: span 2; }
+    .span-row-2 { grid-row: span 2; }
+    .full-width { grid-column: 1 / -1; }
+
+    /* PART I: FEATURE CELL (Students/Courses) */
+    .feature-cell {
+        background: linear-gradient(135deg, #ffffff 0%, #f1f3f4 100%);
+    }
+    
+    /* TITLE CELL */
+    .title-cell {
+        background: transparent;
+        box-shadow: none;
+        border: none;
+        padding: 0;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .dashboard-heading {
+        font-size: 3rem;
+        font-weight: 700;
+        letter-spacing: -1.5px;
+        color: #202124;
+        margin: 0;
+    }
+
+    /* RESPONSIVE */
+    @@media (max-width: 992px) {
+        .dashboard-grid { grid-template-columns: 1fr 1fr; }
+        .span-2 { grid-column: span 2; }
+        .span-row-2 { grid-row: span 1; }
+    }
+    
+    @@media (max-width: 768px) {
+        .dashboard-grid { grid-template-columns: 1fr; }
+        .span-2 { grid-column: span 1; }
+    }
+</style>
+
+<!-- CONTENT -->
+
+<!-- 1. GRID START -->
+<div class="dashboard-grid">
+
+    <!-- === ROW 1: THE WIDE ONES (Total 4 Cols) === -->
+
+    <!-- STUDENTS (Wide: Span 2) -->
+    <a asp-controller="Student" asp-action="Index" class="bento-box span-2 feature-cell">
+        <div class="d-flex justify-content-between align-items-start h-100">
+            <div>
+                <i class="bi bi-people-fill big-icon text-google-blue"></i>
+                <div class="mt-2">
+                    <h3 class="bento-title">Students</h3>
+                    <p class="bento-subtitle">Manage student records, validation &amp; DI.</p>
+                </div>
+            </div>
+            <div class="bg-white rounded-circle shadow-sm p-3">
+                 <i class="bi bi-arrow-right" style="font-size: 1.5rem;"></i>
+            </div>
+        </div>
+    </a>
+
+    <!-- ENROLLMENTS (Wide: Span 2) -->
+    <a asp-controller="Enrollment" asp-action="Index" class="bento-box span-2">
+        <div class="d-flex justify-content-between align-items-start h-100">
+            <div>
+                 <i class="bi bi-calendar-check-fill big-icon text-google-yellow"></i>
+                 <div class="mt-2">
+                    <h3 class="bento-title">Enrollments</h3>
+                    <p class="bento-subtitle">Link Students to Courses (M:M)</p>
+                 </div>
+            </div>
+             <i class="bi bi-link-45deg text-secondary-dark" style="font-size: 2rem; opacity: 0.5;"></i>
+        </div>
+    </a>
+
+
+    <!-- === ROW 2: THE TALL ONES & FILLERS === -->
+
+    <!-- COURSES (Tall: Span Row 2) -->
+    <a asp-controller="Course" asp-action="Index" class="bento-box span-row-2">
+        <div class="d-flex flex-column h-100">
+            <i class="bi bi-book-half big-icon text-google-red"></i>
+            <h3 class="bento-title">Courses</h3>
+            <p class="bento-subtitle mb-4">View active catalog</p>
+            
+            <div class="mt-auto pt-3 border-top border-light">
+                 <span class="text-secondary small">Course Mgmt &rarr;</span>
+            </div>
+        </div>
+    </a>
+
+    <!-- ADMIN PANEL (Tall: Span Row 2) -->
+    <a asp-controller="User" asp-action="Index" class="bento-box span-row-2" style="background-color: #202124; color: white;">
+        <div class="d-flex flex-column h-100 justify-content-between">
+            <i class="bi bi-shield-lock-fill big-icon text-google-green"></i>
+            <div>
+                <h3 class="bento-title" style="color:white;">Admin<br>Panel</h3>
+                <p class="bento-subtitle" style="color: #9aa0a6;">
+                    System Users &amp; Permissions.
+                </p>
+            </div>
+            <div class="mt-3 pt-3 border-top border-secondary">
+                <span class="badge bg-light text-dark rounded-pill">Secure Area</span>
+            </div>
+        </div>
+    </a>
+
+    <!-- TITLE BOX (Span 2 - Sits next to the two tall columns) -->
+    <div class="bento-box title-cell span-2">
+        <h1 class="dashboard-heading">LAB 06<br><span style="color: #4285F4">OVERVIEW</span></h1>
+    </div>
+
+    <!-- ARCHITECTURE / EXTRA (Span 2 - Sits under Title Box) -->
+    <div class="bento-box span-2">
+        <div class="d-flex align-items-center mb-3">
+             <i class="bi bi-cpu big-icon text-secondary-dark me-3 mb-0"></i>
+             <h3 class="bento-title mb-0">Architecture</h3>
+        </div>
+        <p class="bento-subtitle">
+            Running <strong>ASP.NET Core 8.0</strong> with Dependency Injection (DI) and Client-Side Validation enabled.
+        </p>
+    </div>
+
+</div>
+<!-- GRID END -->

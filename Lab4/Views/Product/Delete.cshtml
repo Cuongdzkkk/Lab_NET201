@@ -1,0 +1,18 @@
+@model Product
+
+<h3>Delete Product</h3>
+
+<p>Bạn có chắc muốn xóa sản phẩm này?</p>
+
+<ul>
+    <li>Name: @Model.Name</li>
+    <li>Price: @Model.Price</li>
+    <li>Quantity: @Model.Quantity</li>
+    <li>Status: @Model.Status</li>
+</ul>
+
+<form asp-action="DeleteConfirmed" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit">Delete</button>
+    <a asp-action="Index">Cancel</a>
+</form>

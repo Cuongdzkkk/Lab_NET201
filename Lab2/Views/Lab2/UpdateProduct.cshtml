@@ -1,0 +1,36 @@
+@model Lab2.Models.Product
+
+@{
+    ViewData["Title"] = "Modify Entity";
+}
+
+<div style="max-width: 600px; margin: 0 auto;">
+    <div class="bento-card">
+        <div class="flex-between mb-2">
+            <h2>MODIFY ENTITY: @Model.Id</h2>
+            <a asp-action="ProductList" class="btn btn-cyan" style="border-style:dashed;">CANCEL</a>
+        </div>
+
+        <form asp-action="UpdateProduct">
+            <input type="hidden" asp-for="Id" />
+            
+            <div class="form-group">
+                <label asp-for="Name" class="form-label">PRODUCT SIGNATURE</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Description" class="form-label">DATA DESCRIPTION</label>
+                <textarea asp-for="Description" class="form-control" rows="3" style="background:transparent; border:none; border-bottom:2px solid rgba(0,243,255,0.3); color:var(--neon-cyan); width:100%; font-family:var(--font-mono);"></textarea>
+            </div>
+
+             <div class="form-group">
+                <label asp-for="Price" class="form-label">UNIT VALUE</label>
+                <input asp-for="Price" class="form-control" type="number" step="0.01" />
+            </div>
+
+            <button type="submit" class="btn btn-cyan" style="width: 100%; margin-top: 1rem;">EXECUTE UPDATE</button>
+        </form>
+    </div>
+</div>

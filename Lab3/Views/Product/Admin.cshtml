@@ -1,0 +1,80 @@
+@model IEnumerable<Product>
+
+@{
+    ViewData["Title"] = "Admin Command Center";
+    ViewData["IsPortal"] = false;
+    Layout = "_Layout";
+}
+
+<div class="zen-container" style="padding-top: 40px;">
+    
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <div>
+            <h1 class="mb-2" style="font-size: 2.5rem;">Inventory Control</h1>
+            <p class="text-muted">Manage stock, update pricing, and curate the collection.</p>
+        </div>
+        <a asp-action="Create" class="btn-fab-inline shadow-sm">
+            <span style="font-size: 1.5rem; margin-right: 10px;">+</span> Add New Item
+        </a>
+    </div>
+
+    <div class="glass-panel">
+        <!-- Header Row -->
+        <div class="d-flex text-muted font-weight-bold mb-3 px-3 uppercase text-small" style="letter-spacing: 1px; font-size: 0.8rem;">
+            <div style="width: 80px;">IMAGE</div>
+            <div style="flex: 2;">PRODUCT NAME</div>
+            <div style="flex: 1;">CATEGORY</div>
+            <div style="flex: 1;">PRICE</div>
+            <div style="flex: 1;">STOCK</div>
+            <div style="flex: 1.5; text-align: right;">ACTIONS</div>
+        </div>
+
+        <!-- Data Rows -->
+        @foreach (var item in Model)
+        {
+            <div class="data-row">
+                <!-- Image -->
+                <div>
+                     <img src="@(string.IsNullOrEmpty(item.ImageUrl) ? "https://placehold.co/100?text=+" : item.ImageUrl)" 
+                          class="row-thumb" alt="@item.Name" 
+                          onerror="this.src='https://placehold.co/100?text=Error'"/>
+                </div>
+                
+                <!-- Name -->
+                <div>
+                    <strong style="font-size: 1.1rem; display: block;">@item.Name</strong>
+                    <span class="text-muted small">@item.Color</span>
+                </div>
+
+                <!-- Category -->
+                <div>
+                    <span style="background: #f3f3f3; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem;">@item.Category</span>
+                </div>
+
+                <!-- Price -->
+                <div style="font-family: var(--font-heading); font-size: 1.2rem;">
+                    @item.UnitPrice.ToString("C0")
+                </div>
+
+                <!-- Stock -->
+                <div>
+                    @if(item.AvailableQuantity < 5)
+                    {
+                        <span style="color: var(--color-crimson); font-weight: 600;">Low: @item.AvailableQuantity</span>
+                    }
+                    else
+                    {
+                         <span style="color: var(--color-forest);">@item.AvailableQuantity Units</span>
+                    }
+                </div>
+
+                <!-- Actions -->
+                <div style="text-align: right;">
+                    <a asp-action="Edit" asp-route-id="@item.ProductId" class="btn-icon btn-amber" title="Edit">✏️</a>
+                    <a asp-action="Details" asp-route-id="@item.ProductId" class="btn-icon btn-teal" title="View">👁️</a>
+                    <a asp-action="Delete" asp-route-id="@item.ProductId" class="btn-icon btn-crimson" title="Delete">🗑️</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>

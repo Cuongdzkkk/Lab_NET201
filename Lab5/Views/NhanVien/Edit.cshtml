@@ -1,0 +1,97 @@
+@model Lab5.Models.NhanVien
+
+@{
+    ViewData["Title"] = "Edit NhanVien";
+}
+
+<h1>Sửa Thông Tin Nhân Viên</h1>
+
+@if (ViewBag.Errors != null)
+{
+    <div class="alert alert-danger">
+        <h4>Lỗi xảy ra:</h4>
+        <ul>
+            @foreach (var error in ViewBag.Errors as List<string>)
+            {
+                <li>@error</li>
+            }
+        </ul>
+    </div>
+}
+
+<div class="card">
+    <div class="card-body">
+        <form asp-action="Edit">
+            <input type="hidden" asp-for="MaNV" />
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="HoNV" class="control-label"></label>
+                        <input asp-for="HoNV" class="form-control" />
+                        <span asp-validation-for="HoNV" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label asp-for="TenLot" class="control-label"></label>
+                        <input asp-for="TenLot" class="form-control" />
+                        <span asp-validation-for="TenLot" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label asp-for="TenNV" class="control-label"></label>
+                        <input asp-for="TenNV" class="form-control" />
+                        <span asp-validation-for="TenNV" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label asp-for="Phai" class="control-label"></label>
+                        <select asp-for="Phai" class="form-control">
+                            <option value="">-- Chọn --</option>
+                            <option value="Nam">Nam</option>
+                            <option value="Nữ">Nữ</option>
+                        </select>
+                        <span asp-validation-for="Phai" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label asp-for="DChi" class="control-label"></label>
+                        <input asp-for="DChi" class="form-control" />
+                        <span asp-validation-for="DChi" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="Luong" class="control-label"></label>
+                        <input asp-for="Luong" class="form-control" type="number" step="0.01" />
+                        <span asp-validation-for="Luong" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label asp-for="NgaySinh" class="control-label"></label>
+                        <input asp-for="NgaySinh" class="form-control" type="date" value="@Model.NgaySinh.ToString("yyyy-MM-dd")" />
+                        <span asp-validation-for="NgaySinh" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label asp-for="PHG" class="control-label"></label>
+                        <input asp-for="PHG" class="form-control" type="number" />
+                        <span asp-validation-for="PHG" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label asp-for="Ma_NQL" class="control-label"></label>
+                        <input asp-for="Ma_NQL" class="form-control" />
+                        <span asp-validation-for="Ma_NQL" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group mt-3">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Lưu Thay Đổi
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Hủy
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

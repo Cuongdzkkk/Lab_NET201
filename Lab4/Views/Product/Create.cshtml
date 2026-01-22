@@ -1,0 +1,307 @@
+@model CreateProductVM
+
+@{
+    ViewData["Title"] = "Initialize Product";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        
+        <!-- 💎 GLASS CARD CONTAINER -->
+        <div class="glass-card floating" style="margin-top: 2rem; border-top: 1px solid rgba(139, 92, 246, 0.5);">
+            
+            <div class="text-center mb-5">
+                <h2 class="fw-bold" style="letter-spacing: 2px;">🚀 INITIALIZE PRODUCT</h2>
+                <p class="text-muted">Enter product specifications for the Antigravity database.</p>
+            </div>
+
+            <form asp-action="Create" method="post" enctype="multipart/form-data">
+
+                <!-- ⚡ CUSTOM MODEL BINDER FIELD -->
+                <div class="neon-input-group mb-5">
+                    <h5 class="text-cyan mb-3">⚡ Quick Import (Advanced)</h5>
+                    <div class="position-relative">
+                        <input asp-for="RawProduct" class="form-control neon-input custom-input" placeholder=" " data-val="false" />
+                        <label class="floating-label">Format: Name - Price - Quantity - true/false</label>
+                        <div class="neon-line"></div>
+                    </div>
+                    <small class="text-muted">Example: <span class="text-light">CyberDeck - 2500000 - 5 - true</span></small>
+                </div>
+
+                <div class="d-flex align-items-center mb-4">
+                    <hr class="flex-grow-1" style="border-color: rgba(255,255,255,0.1);">
+                    <span class="px-3 text-muted">OR MANUAL ENTRY</span>
+                    <hr class="flex-grow-1" style="border-color: rgba(255,255,255,0.1);">
+                </div>
+
+                <!-- 🖊️ INPUT FIELDS GRID -->
+                <div class="row g-4">
+                    <div class="col-md-12">
+                        <div class="position-relative">
+                            <input asp-for="Name" class="form-control neon-input" placeholder=" " />
+                            <label class="floating-label">Product Name</label>
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="position-relative">
+                            <input asp-for="Price" type="number" step="0.01" class="form-control neon-input" placeholder=" " />
+                            <label class="floating-label">Price (VNĐ)</label>
+                            <span asp-validation-for="Price" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="position-relative">
+                            <input asp-for="Quantity" type="number" min="1" class="form-control neon-input" placeholder=" " />
+                            <label class="floating-label">Quantity</label>
+                            <span asp-validation-for="Quantity" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="position-relative">
+                            <select asp-for="Status" class="form-select neon-input">
+                                <option value="">-- Select Status --</option>
+                                <option value="true">Active (On Sale)</option>
+                                <option value="false">Inactive (Hidden)</option>
+                            </select>
+                            <span asp-validation-for="Status" class="text-danger small"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 🖼️ CUSTOM FILE UPLOAD -->
+                <div class="mt-4 mb-5">
+                    <label class="text-cyan fw-bold mb-2">Product Hologram (Image)</label>
+                    <div class="upload-container" id="uploadZone">
+                        <input asp-for="ImageFile" type="file" accept="image/*" id="imageUpload" class="file-input-hidden" />
+                        
+                        <div class="upload-content text-center">
+                            <div class="mb-3">
+                                <i class="bi bi-cloud-upload" style="font-size: 2rem; color: var(--neon-purple);"></i>
+                            </div>
+                            <span class="btn btn-outline-light btn-sm mb-2">Choose File</span>
+                            <p class="small text-muted mb-0">or drop image here</p>
+                        </div>
+
+                        <!-- Preview Area -->
+                        <div id="imagePreviewContainer" class="preview-container d-none">
+                            <img id="imagePreviewImg" src="" alt="Preview" />
+                            <button type="button" id="removeImageBtn" class="btn-close-preview">×</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 🚀 CYBER LAUNCHER BUTTON -->
+                <div class="d-grid">
+                    <button type="submit" class="cyber-button">
+                        <span class="btn-text">🚀 LAUNCH PRODUCT</span>
+                        <div class="btn-glitch"></div>
+                    </button>
+                </div>
+
+            </form>
+        </div>
+        
+        <div class="text-center mt-3">
+            <a asp-action="Index" class="text-muted text-decoration-none hover-link">← Return to Command Center</a>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    /* 🎨 LOCAL STYLES FOR CREATE PAGE (ADDITIVE) */
+    
+    /* Neon Input & Floating Labels */
+    .neon-input {
+        background: rgba(10, 10, 20, 0.6) !important;
+        border: 1px solid rgba(255,255,255,0.1);
+        color: white !important;
+        height: 50px;
+        padding-top: 20px;
+        padding-left: 15px;
+    }
+    
+    .neon-input:focus {
+        border-color: var(--neon-cyan);
+        box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+    }
+    
+    .custom-input {
+        border-color: var(--neon-purple) !important;
+    }
+    
+    .floating-label {
+        position: absolute;
+        top: 12px;
+        left: 15px;
+        pointer-events: none;
+        color: rgba(255,255,255,0.5);
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+    }
+    
+    /* Float animation when focused or has value */
+    .neon-input:focus ~ .floating-label,
+    .neon-input:not(:placeholder-shown) ~ .floating-label {
+        top: 5px;
+        font-size: 0.7rem;
+        color: var(--neon-cyan);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    /* File Upload Styling */
+    .file-input-hidden {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+        z-index: 2;
+    }
+    
+    .upload-container {
+        position: relative;
+        border: 2px dashed rgba(255,255,255,0.2);
+        border-radius: 12px;
+        padding: 30px;
+        transition: all 0.3s ease;
+        background: rgba(0,0,0,0.2);
+        min-height: 150px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .upload-container:hover, .upload-container.dragover {
+        border-color: var(--neon-purple);
+        background: rgba(139, 92, 246, 0.1);
+        box-shadow: 0 0 20px rgba(139, 92, 246, 0.2) inset;
+    }
+    
+    .preview-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #1a1a2e;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 3;
+        overflow: hidden;
+    }
+    
+    .preview-container img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    }
+    
+    .btn-close-preview {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: rgba(255,0,0,0.8);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        font-size: 1.2rem;
+        cursor: pointer;
+        z-index: 4;
+    }
+
+    /* 🚀 Cyber Button */
+    .cyber-button {
+        position: relative;
+        background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+        border: none;
+        padding: 15px;
+        font-weight: bold;
+        color: white;
+        letter-spacing: 2px;
+        clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        font-size: 1.1rem;
+        overflow: hidden;
+    }
+    
+    .cyber-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 
+            0 0 20px var(--neon-blue),
+            0 0 40px var(--neon-purple);
+        text-shadow: 0 0 10px white;
+    }
+    
+    .hover-link:hover {
+        color: var(--neon-cyan) !important;
+        text-shadow: 0 0 10px var(--neon-cyan);
+    }
+</style>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        // 🖼️ IMAGE PREVIEW LOGIC
+        const uploadZone = document.getElementById('uploadZone');
+        const fileInput = document.getElementById('imageUpload');
+        const previewContainer = document.getElementById('imagePreviewContainer');
+        const previewImg = document.getElementById('imagePreviewImg');
+        const removeBtn = document.getElementById('removeImageBtn');
+        const uploadContent = document.querySelector('.upload-content');
+
+        fileInput.addEventListener('change', function(e) {
+            handleFile(this.files[0]);
+        });
+
+        // Drag & Drop effects
+        uploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadZone.classList.add('dragover');
+        });
+
+        uploadZone.addEventListener('dragleave', () => {
+            uploadZone.classList.remove('dragover');
+        });
+
+        uploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadZone.classList.remove('dragover');
+            fileInput.files = e.dataTransfer.files;
+            handleFile(e.dataTransfer.files[0]);
+        });
+
+        function handleFile(file) {
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImg.src = e.target.result;
+                    previewContainer.classList.remove('d-none');
+                    uploadContent.classList.add('d-none'); // Hide text
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        removeBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent triggering file input
+            fileInput.value = ''; // Clear input
+            previewImg.src = '';
+            previewContainer.classList.add('d-none');
+            uploadContent.classList.remove('d-none'); // Show text again
+        });
+    </script>
+}
+

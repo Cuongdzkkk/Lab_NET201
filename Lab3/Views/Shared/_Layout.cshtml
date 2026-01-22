@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - LAB 3 ARCHIVE</title>
+    
+    <!-- FONTS: Cormorant Garamond (Serif) & Space Mono (Tech) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <!-- FX LAYERS -->
+    <div id="film-grain"></div>
+    <div id="shutter-blind"></div>
+    <div id="custom-cursor"></div>
+    <div id="cursor-follower"></div>
+
+    <header class="gallery-nav">
+        <div class="nav-brand">
+            <a asp-controller="Home" asp-action="Index">LAB 03 // ARCHIVE</a>
+        </div>
+        <div class="nav-menu">
+            <a asp-controller="Product" asp-action="Shop" class="nav-link">CATALOG</a>
+            <a asp-controller="Cart" asp-action="Index" class="nav-link">CART [0]</a>
+        </div>
+    </header>
+
+    <main role="main" class="main-content">
+        @RenderBody()
+    </main>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

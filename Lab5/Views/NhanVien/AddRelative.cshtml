@@ -1,0 +1,52 @@
+@model Lab5.Models.ThanNhan
+
+@{
+    ViewData["Title"] = "Add Relative";
+}
+
+<h1>Add Relative (Than Nhan)</h1>
+
+@if (ViewBag.Errors != null)
+{
+    <div class="alert alert-danger">
+        <ul>
+            @foreach (var error in ViewBag.Errors)
+            {
+                <li>@error</li>
+            }
+        </ul>
+    </div>
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddRelative">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="MaNV" value="@ViewBag.MaNV" />
+            
+            <div class="form-group">
+                <label asp-for="TenTN" class="control-label"></label>
+                <input asp-for="TenTN" class="form-control" />
+                <span asp-validation-for="TenTN" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MoiQuanHe" class="control-label"></label>
+                <input asp-for="MoiQuanHe" class="form-control" />
+                <span asp-validation-for="MoiQuanHe" class="text-danger"></span>
+            </div>
+             <div class="form-group">
+                <label asp-for="Phai" class="control-label"></label>
+                <input asp-for="Phai" class="form-control" />
+                <span asp-validation-for="Phai" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NgSinh" class="control-label"></label>
+                <input asp-for="NgSinh" class="form-control" type="date" />
+                <span asp-validation-for="NgSinh" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-2">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>

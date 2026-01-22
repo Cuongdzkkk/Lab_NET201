@@ -48,15 +48,109 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(updateTime, 1000);
     updateTime();
 
-    // 4. Fake CPU Stats
-    const updateCpu = () => {
-        const cpuEl = document.getElementById('cpu-stat');
-        if (cpuEl) {
-            const load = Math.floor(Math.random() * 30) + 10;
-            cpuEl.innerText = `${load}%`;
-        }
+    // 4. NEURAL MONITOR SYSTEM (Oscilloscope & Live Data)
+    const monitorCanvas = document.getElementById('neural-monitor');
+
+    if (monitorCanvas) {
+        const ctx = monitorCanvas.getContext('2d');
+        let width, height;
+        let pData = [];
+        let hue = 180; // Cyan base
+        let isAlert = false;
+
+        // Resize handler
+        const resize = () => {
+            width = monitorCanvas.width = monitorCanvas.offsetWidth;
+            height = monitorCanvas.height = monitorCanvas.offsetHeight;
+        };
+        window.addEventListener('resize', resize);
+        resize();
+
+        // Wave Animation Loop
+        const drawWave = () => {
+            ctx.clearRect(0, 0, width, height);
+
+            // Dynamic Color
+            const color = isAlert ? 'rgba(255, 0, 60, 0.5)' : 'rgba(0, 243, 255, 0.3)';
+            const lineWidth = isAlert ? 3 : 2;
+
+            ctx.beginPath();
+            ctx.lineWidth = lineWidth;
+            ctx.strokeStyle = color;
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = isAlert ? '#ff003c' : '#00f3ff';
+
+            // Generate random wave if no fresh data, or smooth interpolation
+            // For visual effect, we use a sine wave + noise
+            const time = Date.now() * 0.002;
+
+            for (let x = 0; x < width; x++) {
+                // Sine wave synthesis
+                const y = Math.sin(x * 0.02 + time) * 20 +
+                    Math.sin(x * 0.05 + time * 2) * 10 +
+                    (Math.random() - 0.5) * 5; // Noise
+
+                // Center vertically
+                ctx.lineTo(x, height / 2 + y);
+            }
+
+            ctx.stroke();
+            requestAnimationFrame(drawWave);
+        };
+        drawWave();
+
+        // Silent Fetch (Live Data)
+        const fetchData = async () => {
+            try {
+                const response = await fetch('/Home/GetSystemMetrics');
+                if (!response.ok) return;
+                const data = await response.json();
+
+                // Update DOM
+                document.getElementById('metric-cpu').innerText = `${data.cpu}%`;
+                document.getElementById('metric-ram').innerText = `${data.ram}GB`;
+                document.getElementById('metric-temp').innerText = `${data.temp}°C`;
+
+                // Alert State Logic
+                isAlert = data.cpu > 80;
+                const indicator = document.getElementById('status-indicator');
+                if (isAlert) {
+                    indicator.classList.remove('bg-cyan-400', 'shadow-[0_0_10px_#00f3ff]');
+                    indicator.classList.add('bg-red-500', 'shadow-[0_0_10px_#ff003c]');
+                    document.getElementById('metric-cpu').classList.add('text-red-500');
+                    document.getElementById('metric-cpu').classList.remove('text-cyan-400');
+                } else {
+                    indicator.classList.add('bg-cyan-400', 'shadow-[0_0_10px_#00f3ff]');
+                    indicator.classList.remove('bg-red-500', 'shadow-[0_0_10px_#ff003c]');
+                    document.getElementById('metric-cpu').classList.remove('text-red-500');
+                    document.getElementById('metric-cpu').classList.add('text-cyan-400');
+                }
+
+            } catch (err) { console.error('Neural Link Lost', err); }
+        };
+        setInterval(fetchData, 2000);
+        fetchData(); // Initial call
     }
-    setInterval(updateCpu, 2000);
+
+    // 5. Magnetic Dock Buttons
+    const dockItems = document.querySelectorAll('.dock-item');
+    dockItems.forEach(item => {
+        item.addEventListener('mousemove', (e) => {
+            const rect = item.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+
+            // Magnetic pull strength
+            item.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px) scale(1.1)`;
+        });
+
+        item.addEventListener('mouseleave', () => {
+            item.style.transform = 'translate(0, 0) scale(1)';
+        });
+    });
+
+    // 6. Scanline Trigger (Static only)
+    document.body.classList.add('scanline');
 
     // 5. Page Transition Logic
     const loader = document.getElementById('nexus-loader');
@@ -97,4 +191,139 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // 7. SECURITY TERMINAL LOGIC
+    const terminalInput = document.getElementById('terminal-input');
+    const terminalOutput = document.getElementById('terminal-output');
+    const btnLogin = document.getElementById('btn-login');
+    const btnProtocol = document.getElementById('btn-protocol');
+    const securityScreen = document.getElementById('security-screen');
+
+    // Typewriter Effect Function
+    const typeWriter = (text, element, speed = 30) => {
+        element.innerHTML = ''; // Clear previous
+        let i = 0;
+        const type = () => {
+            if (i < text.length) {
+                element.innerHTML += text.charAt(i);
+                i++;
+                setTimeout(type, speed);
+            }
+        };
+        type();
+    };
+
+    if (btnLogin) {
+        btnLogin.addEventListener('click', async () => {
+            const code = terminalInput.value;
+            terminalOutput.innerHTML = '<span class="text-green-500 animate-pulse">AUTHENTICATING...</span>';
+
+            // Slight delay for realism
+            setTimeout(async () => {
+                try {
+                    // Call Backend: Authenticate (POST)
+                    const formData = new FormData();
+                    formData.append('code', code);
+
+                    const response = await fetch('/Security/Authenticate', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const resultText = await response.text();
+
+                    if (resultText.includes("DENIED")) {
+                        // ERROR EFFECT
+                        securityScreen.parentElement.classList.add('animate-shake');
+                        terminalOutput.classList.add('text-red-500');
+                        typeWriter(resultText, terminalOutput);
+
+                        setTimeout(() => {
+                            securityScreen.parentElement.classList.remove('animate-shake');
+                            terminalOutput.classList.remove('text-red-500');
+                        }, 500);
+                    } else {
+                        // SUCCESS EFFECT
+                        terminalOutput.classList.add('text-green-400');
+                        typeWriter(resultText, terminalOutput);
+                    }
+
+                } catch (err) {
+                    terminalOutput.innerText = "CONNECTION_ERROR::" + err;
+                }
+            }, 800);
+        });
+    }
+
+    if (btnProtocol) {
+        btnProtocol.addEventListener('click', async () => {
+            terminalOutput.innerHTML = '<span class="text-yellow-500">INITIALIZING PROTOCOL...</span>';
+
+            try {
+                // Call Backend: ExecuteOrder66 (ActionName Demo)
+                const response = await fetch('/Security/ExecuteOrder66');
+                const text = await response.text();
+
+                typeWriter(text, terminalOutput, 50);
+
+            } catch (err) {
+                terminalOutput.innerText = "PROTOCOL_FAILURE::" + err;
+            }
+        });
+    }
+
 });
+
+// --- GLOBAL DIAGNOSTIC FUNCTIONS (Called via OnClick) ---
+
+window.runDiagnostic = async (type) => {
+    const diagModal = document.getElementById('diag-modal');
+    const diagBody = document.getElementById('diag-body');
+    if (!diagModal || !diagBody) return;
+
+    if (type === 'redirect') {
+        // Show Loading Spin then Redirect
+        const loader = document.getElementById('nexus-loader');
+        if (loader) {
+            loader.classList.remove('opacity-0');
+            loader.innerHTML = '<div class="cube-loader"></div><div class="text-white font-mono mt-4">REROUTING...</div>';
+            setTimeout(() => {
+                window.location.href = '/Calibration/TestRedirect';
+            }, 1000);
+        }
+        return;
+    }
+
+    // Open Modal State
+    diagModal.classList.remove('opacity-0', 'pointer-events-none');
+    diagModal.querySelector('#diag-modal-content').classList.remove('scale-95');
+    diagModal.querySelector('#diag-modal-content').classList.add('scale-100');
+
+    diagBody.innerHTML = '<div class="animate-pulse text-cyan-500">ACCESSING CORE DATABANKS...</div>';
+
+    try {
+        let url = '';
+        if (type === 'content') url = '/Calibration/TestContent';
+        if (type === 'json') url = '/Calibration/TestJson';
+
+        const res = await fetch(url);
+
+        if (type === 'json') {
+            const data = await res.json();
+            diagBody.innerHTML = `<pre class="text-xs text-green-300 whitespace-pre-wrap">${JSON.stringify(data, null, 2)}</pre>`;
+        } else {
+            const text = await res.text();
+            diagBody.innerHTML = `<div class="text-cyan-300 border-l-2 border-cyan-500 pl-3">${text}</div>`;
+        }
+
+    } catch (err) {
+        diagBody.innerHTML = `<div class="text-red-500">DIAGNOSTIC FAILURE: ${err}</div>`;
+    }
+};
+
+window.closeModal = () => {
+    const diagModal = document.getElementById('diag-modal');
+    if (!diagModal) return;
+    diagModal.classList.add('opacity-0', 'pointer-events-none');
+    diagModal.querySelector('#diag-modal-content').classList.add('scale-95');
+    diagModal.querySelector('#diag-modal-content').classList.remove('scale-100');
+};

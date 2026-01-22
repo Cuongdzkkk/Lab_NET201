@@ -1,0 +1,101 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="bento-grid">
+    <!-- Main Welcome Panel -->
+    <div class="bento-box span-2 span-row-2" style="background: linear-gradient(135deg, rgba(227, 242, 253, 0.95) 0%, rgba(255, 255, 255, 0.95) 100%);">
+        <div class="bento-content">
+            <h5 class="bento-title">💧 Welcome Back</h5>
+            <h1 style="font-size: 2.5rem; margin: 1rem 0;">System Dashboard</h1>
+            <p style="color: var(--text-body); font-size: 1.1rem; margin: 1rem 0;">
+                Manage your academic data with ease. All systems operational.
+            </p>
+            <div style="margin-top: 2rem;">
+                <a asp-controller="Students" asp-action="Index" class="btn-rain">
+                    📚 Manage Students
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Sessions Card -->
+    <div class="bento-box">
+        <div class="bento-content">
+            <h5 class="bento-title">🌊 Active Sessions</h5>
+            <div class="metric">1,245</div>
+            <div style="margin-top: 1rem;">
+                <div style="height: 8px; width: 100%; background: var(--rain-light); border-radius: 4px; overflow: hidden;">
+                    <div style="height: 100%; width: 75%; background: var(--rain-primary); border-radius: 4px; transition: width 0.5s ease;"></div>
+                </div>
+                <p style="font-size: 0.875rem; margin-top: 0.5rem; color: var(--rain-primary);">
+                    ↑ 12% from last week
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- System Health Card -->
+    <div class="bento-box">
+        <div class="bento-content">
+            <h5 class="bento-title">💎 System Health</h5>
+            <div class="metric" style="color: var(--rain-droplet);">98%</div>
+            <div style="margin-top: 1rem; display: flex; align-items-end; gap: 6px; height: 60px;">
+                <div style="flex: 1; background: var(--rain-light); border-radius: 4px; height: 35%;"></div>
+                <div style="flex: 1; background: var(--rain-light); border-radius: 4px; height: 60%;"></div>
+                <div style="flex: 1; background: var(--rain-primary); border-radius: 4px; height: 45%;"></div>
+                <div style="flex: 1; background: var(--rain-primary); border-radius: 4px; height: 85%;"></div>
+                <div style="flex: 1; background: var(--rain-droplet); border-radius: 4px; height: 70%;"></div>
+                <div style="flex: 1; background: var(--rain-light); border-radius: 4px; height: 50%;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity Panel -->
+    <div class="bento-box span-2">
+        <div class="bento-content">
+            <h5 class="bento-title">🌐 Recent Activity</h5>
+            <ul style="list-style: none; padding: 0; margin: 0;">
+                <li style="padding: 0.75rem; border-bottom: 1px solid var(--rain-light); display: flex; align-items: center; gap: 1rem;">
+                    <span style="color: var(--rain-primary); font-size: 1.25rem;">✓</span>
+                    <div>
+                        <strong style="color: var(--text-dark);">Database Backup</strong>
+                        <p style="margin: 0; font-size: 0.875rem; color: var(--text-body);">Completed successfully at 02:30 AM</p>
+                    </div>
+                </li>
+                <li style="padding: 0.75rem; border-bottom: 1px solid var(--rain-light); display: flex; align-items: center; gap: 1rem;">
+                    <span style="color: #FFB300; font-size: 1.25rem;">⚠</span>
+                    <div>
+                        <strong style="color: var(--text-dark);">High Traffic</strong>
+                        <p style="margin: 0; font-size: 0.875rem; color: var(--text-body);">Detected in Student Portal (Zone A)</p>
+                    </div>
+                </li>
+                <li style="padding: 0.75rem; display: flex; align-items: center; gap: 1rem;">
+                    <span style="color: var(--rain-droplet); font-size: 1.25rem;">↑</span>
+                    <div>
+                        <strong style="color: var(--text-dark);">New Import</strong>
+                        <p style="margin: 0; font-size: 0.875rem; color: var(--text-body);">Batch student import in progress</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Quick Link: Staff Portal -->
+    <div class="bento-box" style="cursor: pointer;" onclick="window.location.href='/NhanVien'">
+        <div style="text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">👥</div>
+            <h5 class="bento-title" style="margin: 0;">Staff Portal</h5>
+            <p style="font-size: 0.875rem; color: var(--text-body); margin-top: 0.5rem;">Manage employees</p>
+        </div>
+    </div>
+
+    <!-- Quick Link: Courses -->
+    <div class="bento-box" style="cursor: pointer;" onclick="window.location.href='/Course'">
+        <div style="text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">📖</div>
+            <h5 class="bento-title" style="margin: 0;">Course Catalog</h5>
+            <p style="font-size: 0.875rem; color: var(--text-body); margin-top: 0.5rem;">Browse courses</p>
+        </div>
+    </div>
+</div>

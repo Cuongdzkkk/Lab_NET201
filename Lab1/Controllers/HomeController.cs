@@ -13,9 +13,31 @@ public class HomeController : Controller
         _logger = logger;
     }
 
+    [HttpGet]
+    public IActionResult GetSystemMetrics()
+    {
+        var rnd = new Random();
+        // Simulate data: CPU 10-99%, RAM 4-64GB, Temp 40-95C
+        var cpu = rnd.Next(10, 100); 
+        var ram = rnd.Next(4, 64);
+        var temp = rnd.Next(40, 95);
+        
+        return Json(new { cpu, ram, temp });
+    }
+
     public IActionResult Index()
     {
         return View();
+    }
+
+    public IActionResult Lab1Hub()
+    {
+        return View(); // Returns Views/Home/Lab1Hub.cshtml
+    }
+
+    public IActionResult Lab1Control()
+    {
+        return View(); // New Test Interface
     }
 
     public IActionResult Privacy()

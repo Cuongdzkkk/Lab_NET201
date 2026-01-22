@@ -1,0 +1,125 @@
+@model IEnumerable<Lab5.Models.Course>
+
+@{
+    ViewData["Title"] = "Course Index";
+}
+
+<h1>Danh Sách Môn Học</h1>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show">
+        @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<p>
+    <a asp-action="Create" class="btn btn-success">
+        <i class="fas fa-plus"></i> Tạo Môn Học Mới
+    </a>
+    <a asp-action="RegisterStudent" class="btn btn-primary">
+        <i class="fas fa-user-plus"></i> Đăng Ký Sinh Viên
+    </a>
+</p>
+
+<table class="table table-striped table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>Course ID</th>
+            <th>Course Name</th>
+            <th>Start Date</th>
+            <th>Số Sinh Viên</th>
+            <th>Thao Tác</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>@item.Id</td>
+            <td>@item.Name</td>
+            <td>@item.StartDate.ToShortDateString()</td>
+            <td>
+                @if (item.StudentCourses != null)
+                {
+                    <span class="badge bg-info">@item.StudentCourses.Count sinh viên</span>
+                }
+                else
+                {
+                    <span class="badge bg-secondary">0 sinh viên</span>
+                }
+            </td>
+            <td>
+                <div class="btn-group" role="group">
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info" title="Xem chi tiết">
+                        <i class="fas fa-eye"></i> Chi tiết
+                    </a>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-primary" title="Sửa">
+                        <i class="fas fa-edit"></i> Sửa
+                    </a>
+                    <button onclick="confirmDelete(@item.Id)" class="btn btn-sm btn-danger" title="Xóa">
+                        <i class="fas fa-trash"></i> Xóa
+                    </button>
+                </div>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Xác Nhận Xóa</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc chắn muốn xóa môn học này?</p>
+                <p class="text-danger"><strong>Lưu ý:</strong> CourseDetails và đăng ký sinh viên sẽ bị ảnh hưởng!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <form id="deleteForm" method="post" style="display:inline;">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-danger">Xác Nhận Xóa</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    function confirmDelete(id) {
+        // Clean up any existing backdrops
+        document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+        
+        var form = document.getElementById('deleteForm');
+        form.action = '/Course/Delete/' + id;
+        
+        // Create modal without backdrop
+        var modalElement = document.getElementById('deleteModal');
+        var modal = new bootstrap.Modal(modalElement, {
+            backdrop: false,  // Disable backdrop to prevent blocking
+            keyboard: true
+        });
+        
+        // Clean up on close
+        modalElement.addEventListener('hidden.bs.modal', function() {
+            document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+        }, { once: true });
+        
+        modal.show();
+    }
+</script>
+}

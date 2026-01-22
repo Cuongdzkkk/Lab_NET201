@@ -1,0 +1,101 @@
+@model Lab5.Models.Course
+
+@{
+    ViewData["Title"] = "Course Details";
+}
+
+<h1>Chi Tiết Môn Học</h1>
+
+<div class="card">
+    <div class="card-header bg-info text-white">
+        <h5>Thông Tin Môn Học</h5>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Course ID</dt>
+            <dd class="col-sm-9">@Model.Id</dd>
+            
+            <dt class="col-sm-3">Course Name</dt>
+            <dd class="col-sm-9">@Model.Name</dd>
+            
+            <dt class="col-sm-3">Start Date</dt>
+            <dd class="col-sm-9">@Model.StartDate.ToString("dd/MM/yyyy")</dd>
+        </dl>
+    </div>
+</div>
+
+@if (Model.CourseDetails != null)
+{
+    <div class="card mt-3">
+        <div class="card-header bg-success text-white">
+            <h5>Course Details</h5>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Description</dt>
+                <dd class="col-sm-9">@Model.CourseDetails.Description</dd>
+                
+                <dt class="col-sm-3">Syllabus</dt>
+                <dd class="col-sm-9">@Model.CourseDetails.Syllabus</dd>
+                
+                <dt class="col-sm-3">Prerequisites</dt>
+                <dd class="col-sm-9">@Model.CourseDetails.Prerequisites</dd>
+                
+                <dt class="col-sm-3">Credits</dt>
+                <dd class="col-sm-9">@Model.CourseDetails.Credits</dd>
+                
+                <dt class="col-sm-3">Duration (Hours)</dt>
+                <dd class="col-sm-9">@Model.CourseDetails.DurationHours</dd>
+                
+                <dt class="col-sm-3">Instructor</dt>
+                <dd class="col-sm-9">@Model.CourseDetails.Instructor</dd>
+                
+                <dt class="col-sm-3">Location</dt>
+                <dd class="col-sm-9">@Model.CourseDetails.Location</dd>
+            </dl>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning mt-3">
+        <strong>Lưu ý:</strong> Chưa có thông tin chi tiết cho môn học này.
+    </div>
+}
+
+@if (Model.StudentCourses != null && Model.StudentCourses.Any())
+{
+    <div class="card mt-3">
+        <div class="card-header bg-primary text-white">
+            <h5>Sinh Viên Đã Đăng Ký (@Model.StudentCourses.Count)</h5>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var sc in Model.StudentCourses)
+                    {
+                        <tr>
+                            <td>@sc.StudentId</td>
+                            <td>@sc.Student?.FirstName @sc.Student?.LastName</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+<div class="mt-3">
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
+        <i class="fas fa-edit"></i> Sửa
+    </a>
+    <a asp-action="Index" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Quay lại
+    </a>
+</div>
