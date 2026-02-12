@@ -1,0 +1,58 @@
+@* Views/Product/Category.cshtml *@
+@* Chi tiết 1 Category với Products đã được Explicit Load *@
+
+@model Lab8_ExplicitLoading.Models.Category
+
+@{
+    ViewData["Title"] = "Danh mục - " + Model.CategoryName;
+}
+
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-success text-white">
+            <h3><i class="bi bi-folder"></i> @Model.CategoryName</h3>
+            <p class="mb-0">@Model.Description</p>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-info">
+                <strong>Explicit Loading - Collection:</strong> Products đã được load thủ công với 
+                <code>Entry().Collection().LoadAsync()</code>
+            </div>
+
+            <h5>Sản phẩm trong danh mục (@Model.Products.Count):</h5>
+            
+            @if (Model.Products.Any())
+            {
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên sản phẩm</th>
+                            <th class="text-end">Giá</th>
+                            <th class="text-center">Tồn kho</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var product in Model.Products)
+                        {
+                            <tr>
+                                <td>@product.ProductId</td>
+                                <td>@product.Name</td>
+                                <td class="text-end">@product.Price.ToString("N0") VNĐ</td>
+                                <td class="text-center">@product.Stock</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p class="text-muted">Không có sản phẩm trong danh mục này</p>
+            }
+        </div>
+    </div>
+
+    <a asp-action="Index" class="btn btn-primary mt-3">
+        <i class="bi bi-arrow-left"></i> Quay lại
+    </a>
+</div>

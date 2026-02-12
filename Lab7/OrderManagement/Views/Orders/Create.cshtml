@@ -1,0 +1,134 @@
+@model OrderManagement.Models.CreateOrderViewModel
+
+@{
+    ViewData["Title"] = "Tạo Đơn Hàng Mới";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="bi bi-cart-plus me-2"></i>Tạo Đơn Hàng Mới</h4>
+            </div>
+            <div class="card-body">
+                <form asp-action="Create" id="orderForm">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                    <!-- Thông tin khách hàng -->
+                    <h5 class="mb-3"><i class="bi bi-person me-2"></i>Thông Tin Khách Hàng</h5>
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label asp-for="CustomerName" class="form-label"></label>
+                            <input asp-for="CustomerName" class="form-control" placeholder="Nhập tên khách hàng..." />
+                            <span asp-validation-for="CustomerName" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="OrderDate" class="form-label"></label>
+                            <input asp-for="OrderDate" class="form-control" type="datetime-local" />
+                            <span asp-validation-for="OrderDate" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <!-- Chi tiết sản phẩm -->
+                    <h5 class="mb-3"><i class="bi bi-box me-2"></i>Chi Tiết Sản Phẩm</h5>
+                    <div id="itemsContainer">
+                        @for (int i = 0; i < Model.Items.Count; i++)
+                        {
+                            <div class="row mb-3 item-row">
+                                <div class="col-md-2">
+                                    <label class="form-label">Mã SP</label>
+                                    <input name="Items[@i].ProductId" type="number" class="form-control" value="@Model.Items[i].ProductId" min="1" required />
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Tên Sản Phẩm</label>
+                                    <input name="Items[@i].ProductName" type="text" class="form-control" placeholder="Nhập tên sản phẩm..." value="@Model.Items[i].ProductName" required />
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Số Lượng</label>
+                                    <input name="Items[@i].Quantity" type="number" class="form-control quantity" value="@Model.Items[i].Quantity" min="1" required />
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Đơn Giá (VNĐ)</label>
+                                    <input name="Items[@i].UnitPrice" type="number" class="form-control unit-price" value="@Model.Items[i].UnitPrice" min="0" step="1000" required />
+                                </div>
+                                <div class="col-md-1 d-flex align-items-end">
+                                    <button type="button" class="btn btn-danger btn-sm remove-item" title="Xóa">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <button type="button" id="addItem" class="btn btn-outline-success mb-4">
+                        <i class="bi bi-plus-circle me-1"></i>Thêm Sản Phẩm
+                    </button>
+
+                    <hr />
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-lg me-1"></i>Tạo Đơn Hàng
+                        </button>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="bi bi-x-lg me-1"></i>Hủy
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        let itemIndex = @Model.Items.Count;
+
+        // Thêm sản phẩm mới
+        document.getElementById('addItem').addEventListener('click', function() {
+            const container = document.getElementById('itemsContainer');
+            const newRow = document.createElement('div');
+            newRow.className = 'row mb-3 item-row';
+            newRow.innerHTML = `
+                <div class="col-md-2">
+                    <label class="form-label">Mã SP</label>
+                    <input name="Items[${itemIndex}].ProductId" type="number" class="form-control" min="1" required />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Tên Sản Phẩm</label>
+                    <input name="Items[${itemIndex}].ProductName" type="text" class="form-control" placeholder="Nhập tên sản phẩm..." required />
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Số Lượng</label>
+                    <input name="Items[${itemIndex}].Quantity" type="number" class="form-control quantity" value="1" min="1" required />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Đơn Giá (VNĐ)</label>
+                    <input name="Items[${itemIndex}].UnitPrice" type="number" class="form-control unit-price" min="0" step="1000" required />
+                </div>
+                <div class="col-md-1 d-flex align-items-end">
+                    <button type="button" class="btn btn-danger btn-sm remove-item" title="Xóa">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+            `;
+            container.appendChild(newRow);
+            itemIndex++;
+        });
+
+        // Xóa sản phẩm
+        document.getElementById('itemsContainer').addEventListener('click', function(e) {
+            if (e.target.classList.contains('remove-item') || e.target.closest('.remove-item')) {
+                const row = e.target.closest('.item-row');
+                if (document.querySelectorAll('.item-row').length > 1) {
+                    row.remove();
+                } else {
+                    alert('Phải có ít nhất một sản phẩm trong đơn hàng!');
+                }
+            }
+        });
+    </script>
+}

@@ -1,0 +1,54 @@
+@model LibraryManagement.Models.Book
+
+@{
+    ViewData["Title"] = "Thêm Sách";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="bi bi-book me-2"></i>Thêm Sách Mới</h4>
+            </div>
+            <div class="card-body">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="BookTitle" class="form-label"></label>
+                        <input asp-for="BookTitle" class="form-control" placeholder="Nhập tên sách..." />
+                        <span asp-validation-for="BookTitle" class="text-danger"></span>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="PublicationYear" class="form-label"></label>
+                            <input asp-for="PublicationYear" class="form-control" type="number" placeholder="VD: 2024" />
+                            <span asp-validation-for="PublicationYear" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="AuthorId" class="form-label"></label>
+                            <select asp-for="AuthorId" asp-items="ViewBag.Authors" class="form-select">
+                                <option value="">-- Chọn Tác Giả --</option>
+                            </select>
+                            <span asp-validation-for="AuthorId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-lg me-1"></i>Thêm Mới
+                        </button>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="bi bi-x-lg me-1"></i>Hủy
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

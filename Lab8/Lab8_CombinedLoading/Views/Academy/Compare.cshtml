@@ -1,0 +1,133 @@
+@* Views/Academy/Compare.cshtml *@
+@* So sánh EF Core vs Raw SQL *@
+
+@model Lab8_CombinedLoading.Services.ComparisonResult
+
+@{
+    ViewData["Title"] = "So sánh EF Core vs SQL";
+}
+
+<div class="container mt-4">
+    @* Header *@
+    <div class="card bg-secondary text-white mb-4">
+        <div class="card-body">
+            <h2><i class="bi bi-speedometer2"></i> SO SÁNH EF CORE VS RAW SQL</h2>
+            <p class="mb-0">Query: Lấy số học sinh và điểm trung bình cho mỗi khóa học</p>
+        </div>
+    </div>
+
+    @* Performance stats *@
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card bg-primary text-white text-center">
+                <div class="card-body">
+                    <h2>@Model.EfCoreTimeMs ms</h2>
+                    <p class="mb-0">EF Core LINQ</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card bg-success text-white text-center">
+                <div class="card-body">
+                    <h2>@Model.SqlTimeMs ms</h2>
+                    <p class="mb-0">Raw SQL</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        @* EF Core Query *@
+        <div class="col-md-6">
+            <div class="card shadow h-100">
+                <div class="card-header bg-primary text-white">
+                    <h5><i class="bi bi-code-slash"></i> EF Core LINQ Query</h5>
+                </div>
+                <div class="card-body">
+                    <pre class="bg-dark text-light p-3 rounded" style="max-height: 200px; overflow-y: auto;"><code>@Model.EfCoreQuery</code></pre>
+                </div>
+            </div>
+        </div>
+
+        @* SQL Query *@
+        <div class="col-md-6">
+            <div class="card shadow h-100">
+                <div class="card-header bg-success text-white">
+                    <h5><i class="bi bi-database"></i> Raw SQL Query</h5>
+                </div>
+                <div class="card-body">
+                    <pre class="bg-dark text-light p-3 rounded" style="max-height: 200px; overflow-y: auto;"><code>@Model.SqlQuery</code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* Results comparison *@
+    <div class="card shadow mb-4">
+        <div class="card-header bg-dark text-white">
+            <h5><i class="bi bi-table"></i> So sánh kết quả</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h6 class="text-primary">EF Core Results</h6>
+                    <table class="table table-sm table-striped">
+                        <thead>
+                            <tr>
+                                <th>Khóa học</th>
+                                <th class="text-center">Số học sinh</th>
+                                <th class="text-center">Điểm TB</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.EfCoreResults)
+                            {
+                                <tr>
+                                    <td>@item.Title</td>
+                                    <td class="text-center">@item.StudentCount</td>
+                                    <td class="text-center">@(item.AverageGrade?.ToString("0.0") ?? "N/A")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <h6 class="text-success">SQL Results</h6>
+                    <table class="table table-sm table-striped">
+                        <thead>
+                            <tr>
+                                <th>Khóa học</th>
+                                <th class="text-center">Số học sinh</th>
+                                <th class="text-center">Điểm TB</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.SqlResults)
+                            {
+                                <tr>
+                                    <td>@item.Title</td>
+                                    <td class="text-center">@item.StudentCount</td>
+                                    <td class="text-center">@(item.AverageGrade?.ToString("0.0") ?? "N/A")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* Conclusion *@
+    <div class="alert alert-info">
+        <h5><i class="bi bi-lightbulb"></i> Kết luận:</h5>
+        <ul class="mb-0">
+            <li><strong>EF Core LINQ:</strong> Dễ viết, an toàn type, dễ bảo trì, nhưng có thể không tối ưu cho complex queries</li>
+            <li><strong>Raw SQL:</strong> Hiệu năng tốt hơn cho complex queries, nhưng khó bảo trì và dễ lỗi SQL injection</li>
+            <li><strong>Khuyến nghị:</strong> Dùng EF Core cho hầu hết các trường hợp, chỉ dùng Raw SQL khi thực sự cần tối ưu</li>
+        </ul>
+    </div>
+
+    <a asp-action="Index" class="btn btn-primary">
+        <i class="bi bi-arrow-left"></i> Quay lại
+    </a>
+</div>

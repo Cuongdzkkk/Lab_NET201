@@ -1,0 +1,113 @@
+@* Views/Academy/EagerLoading.cshtml *@
+@* Demo Eager Loading với Many-to-Many relationship *@
+
+@model List<Lab8_CombinedLoading.Models.Student>
+
+@{
+    ViewData["Title"] = "Eager Loading Demo";
+}
+
+<div class="container mt-4">
+    @* Header *@
+    <div class="card bg-success text-white mb-4">
+        <div class="card-body">
+            <h2><i class="bi bi-download"></i> EAGER LOADING DEMO</h2>
+            <p class="mb-0">Tất cả Students và Courses được load trong <strong>1 query duy nhất</strong></p>
+        </div>
+    </div>
+
+    @* Code example *@
+    <div class="alert alert-secondary mb-4">
+        <h5>Code sử dụng:</h5>
+        <pre class="bg-dark text-light p-3 rounded"><code>var students = await _context.Students
+    .Include(s => s.Enrollments)          // Load Enrollments collection
+        .ThenInclude(e => e.Course)       // Mỗi Enrollment load Course
+    .OrderBy(s => s.Name)
+    .AsNoTracking()                       // Tối ưu vì chỉ đọc
+    .ToListAsync();</code></pre>
+    </div>
+
+    @* Stats *@
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card bg-primary text-white text-center">
+                <div class="card-body">
+                    <h3>@Model.Count</h3>
+                    <p class="mb-0">Học sinh</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-info text-white text-center">
+                <div class="card-body">
+                    <h3>@Model.Sum(s => s.Enrollments.Count)</h3>
+                    <p class="mb-0">Đăng ký</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-success text-white text-center">
+                <div class="card-body">
+                    <h3>1</h3>
+                    <p class="mb-0">Query duy nhất!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* Student list *@
+    @foreach (var student in Model)
+    {
+        <div class="card mb-4 shadow">
+            <div class="card-header bg-dark text-white d-flex justify-content-between">
+                <h4 class="mb-0"><i class="bi bi-person"></i> @student.Name</h4>
+                <span class="badge bg-success">@student.Enrollments.Count khóa học</span>
+            </div>
+            <div class="card-body">
+                <p><strong>Lớp:</strong> @student.Class | <strong>Email:</strong> @student.Email</p>
+
+                @if (student.Enrollments.Any())
+                {
+                    <table class="table table-sm table-striped">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Khóa học</th>
+                                <th>Giáo viên</th>
+                                <th class="text-center">Tín chỉ</th>
+                                <th class="text-center">Điểm</th>
+                                <th>Ngày ĐK</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var enrollment in student.Enrollments)
+                            {
+                                <tr>
+                                    <td><i class="bi bi-book"></i> @enrollment.Course?.Title</td>
+                                    <td>@enrollment.Course?.Instructor</td>
+                                    <td class="text-center">@enrollment.Course?.Credits</td>
+                                    <td class="text-center">
+                                        @if (enrollment.Grade.HasValue)
+                                        {
+                                            <span class="badge @(enrollment.Grade >= 8 ? "bg-success" : enrollment.Grade >= 5 ? "bg-warning" : "bg-danger")">
+                                                @enrollment.Grade.Value.ToString("0.0")
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">Chưa có</span>
+                                        }
+                                    </td>
+                                    <td>@enrollment.EnrollmentDate.ToString("dd/MM/yyyy")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    }
+
+    <a asp-action="Index" class="btn btn-primary">
+        <i class="bi bi-arrow-left"></i> Quay lại
+    </a>
+</div>

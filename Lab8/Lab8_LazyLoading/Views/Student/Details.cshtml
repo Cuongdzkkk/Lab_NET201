@@ -1,0 +1,56 @@
+@* Views/Student/Details.cshtml *@
+@* Chi tiết 1 student với demo Lazy Loading *@
+
+@model Lab8_LazyLoading.Models.Student
+
+@{
+    ViewData["Title"] = "Chi tiết học sinh - " + Model.Name;
+    var queryLogs = ViewBag.QueryLogs as List<string>;
+}
+
+<div class="container mt-4">
+    <div class="row">
+        @* Thông tin student *@
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h3><i class="bi bi-person-circle"></i> @Model.Name</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>ID:</strong> @Model.StudentId</p>
+                    <p><strong>Email:</strong> @Model.Email</p>
+                    <p><strong>Ngày sinh:</strong> @Model.DateOfBirth?.ToString("dd/MM/yyyy")</p>
+                    <hr>
+                    <h5>Khóa học đã đăng ký (@ViewBag.CourseCount):</h5>
+                    <ul class="list-group">
+                        @foreach (var course in Model.Courses)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                @course.Title
+                                <span class="badge bg-primary">@course.Credits tín chỉ</span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        @* Query Logs *@
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-dark text-white">
+                    <h5><i class="bi bi-terminal"></i> Query Logs - Demo Lazy Loading</h5>
+                </div>
+                <div class="card-body">
+                    <pre class="bg-light p-3 rounded" style="max-height: 400px; overflow-y: auto;">@foreach (var log in queryLogs)
+{<text>@log
+</text>}</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a asp-action="Index" class="btn btn-primary mt-3">
+        <i class="bi bi-arrow-left"></i> Quay lại
+    </a>
+</div>

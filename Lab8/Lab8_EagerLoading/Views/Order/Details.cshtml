@@ -1,0 +1,60 @@
+@* Views/Order/Details.cshtml *@
+@* Chi tiết 1 customer với orders và dishes *@
+
+@model Lab8_EagerLoading.Models.Customer
+
+@{
+    ViewData["Title"] = "Chi tiết khách hàng - " + Model.Name;
+}
+
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h2><i class="bi bi-person-circle"></i> @Model.Name</h2>
+            <p class="mb-0">SĐT: @Model.Phone | ID: @Model.CustomerId</p>
+        </div>
+        <div class="card-body">
+            <h4>Danh sách đơn hàng (@Model.Orders.Count đơn)</h4>
+            
+            @foreach (var order in Model.Orders)
+            {
+                <div class="card mb-3">
+                    <div class="card-header d-flex justify-content-between">
+                        <span>Đơn hàng #@order.OrderId</span>
+                        <span class="badge bg-@(order.Status == "Hoàn thành" ? "success" : "warning")">
+                            @order.Status
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <p>Ngày: @order.OrderDate.ToString("dd/MM/yyyy HH:mm") | 
+                           Tổng: <strong>@order.TotalAmount.ToString("N0") VNĐ</strong></p>
+                        
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Món ăn</th>
+                                    <th>SL</th>
+                                    <th>Giá</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var dish in order.Dishes)
+                                {
+                                    <tr>
+                                        <td>@dish.Name</td>
+                                        <td>@dish.Quantity</td>
+                                        <td>@dish.Price.ToString("N0")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <a asp-action="Index" class="btn btn-secondary mt-3">
+        <i class="bi bi-arrow-left"></i> Quay lại
+    </a>
+</div>

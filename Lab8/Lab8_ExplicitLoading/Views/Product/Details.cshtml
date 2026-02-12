@@ -1,0 +1,63 @@
+@* Views/Product/Details.cshtml *@
+@* Chi tiết 1 product với demo Explicit Loading *@
+
+@model Lab8_ExplicitLoading.Models.Product
+
+@{
+    ViewData["Title"] = "Chi tiết sản phẩm - " + Model.Name;
+    var queryLogs = ViewBag.QueryLogs as List<string>;
+}
+
+<div class="container mt-4">
+    <div class="row">
+        @* Thông tin product *@
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-info text-white">
+                    <h3><i class="bi bi-box-seam"></i> @Model.Name</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>ID:</strong> @Model.ProductId</p>
+                    <p><strong>Giá:</strong> <span class="text-success fw-bold">@Model.Price.ToString("N0") VNĐ</span></p>
+                    <p><strong>Tồn kho:</strong> @Model.Stock</p>
+                    <p><strong>Mô tả:</strong> @(Model.Description ?? "Không có")</p>
+                    <hr>
+                    <p>
+                        <strong>Danh mục:</strong> 
+                        @if (Model.Category != null)
+                        {
+                            <span class="badge bg-primary fs-6">@Model.Category.CategoryName</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Chưa load</span>
+                        }
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        @* Query Logs *@
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-dark text-white">
+                    <h5><i class="bi bi-terminal"></i> Query Logs - Demo Explicit Loading</h5>
+                </div>
+                <div class="card-body">
+                    <pre class="bg-light p-3 rounded" style="max-height: 400px; overflow-y: auto;">@if (queryLogs != null)
+{
+    foreach (var log in queryLogs)
+    {
+        <text>@log
+</text>
+    }
+}</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a asp-action="Index" class="btn btn-primary mt-3">
+        <i class="bi bi-arrow-left"></i> Quay lại
+    </a>
+</div>

@@ -1,0 +1,331 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - DeepMind Nebula</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --slate-bg: #0F172A;
+            --text-white: #FFFFFF;
+            --primary-cyan: #00F0FF;
+            --primary-violet: #8B5CF6;
+            --glass-bg: rgba(15, 23, 42, 0.85);
+            --glass-border: rgba(0, 240, 255, 0.5);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--slate-bg);
+            color: var(--text-white);
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: rgba(15, 23, 42, 0.95);
+            border-bottom: 1px solid var(--primary-cyan);
+        }
+        .navbar-brand {
+            color: var(--primary-cyan) !important;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.8);
+        }
+        .nav-link {
+            color: #E2E8F0 !important;
+        }
+
+        .container.main-content {
+            padding-top: 100px;
+            padding-bottom: 50px;
+        }
+
+        /* CARDS */
+        .card, .glass-panel {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: var(--text-white);
+        }
+        .card-header {
+            background: rgba(0, 240, 255, 0.1);
+            border-bottom: 1px solid var(--primary-cyan);
+            color: var(--primary-cyan);
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        /* =========================================
+           UPDATED: 3D ROUNDED BLACK-TEXT TABLES
+           ========================================= */
+        .table {
+            border-collapse: separate !important;
+            border-spacing: 0 15px !important; /* Spacing between 3D rows */
+            margin-top: 10px;
+        }
+
+        /* Headers remain Neon/Dark for contrast against page */
+        .table thead th {
+            background: transparent;
+            color: var(--primary-cyan) !important;
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+            padding: 0 15px 10px 15px; /* Adjust padding */
+        }
+
+        /* 3D Rows */
+        .table tbody tr {
+            background-color: #FFFFFF !important; /* White Card */
+            box-shadow: 0 8px 15px rgba(0,0,0,0.3), 
+                        inset 0 0 0 1px rgba(255,255,255,0.5); /* 3D Shadow + Highlight */
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
+            border-radius: 15px; /* Fallback for some browsers */
+        }
+
+        /* Hover Effect: Lift Up */
+        .table tbody tr:hover {
+            transform: translateY(-5px) scale(1.01);
+            background-color: #F8FAFC !important;
+            box-shadow: 0 15px 30px rgba(0, 240, 255, 0.2); /* Neon glow shadow on hover */
+            z-index: 10;
+            position: relative;
+        }
+
+        /* Cells */
+        .table tbody td {
+            color: #000000 !important; /* BLACK TEXT */
+            font-weight: 600;
+            border: none;
+            padding: 20px 25px; /* More padding for 3D block feel */
+            vertical-align: middle;
+            background-color: transparent; /* inherit from tr */
+        }
+
+        /* Rounded Corners for Rows (applied to end cells) */
+        .table tbody tr td:first-child {
+            border-top-left-radius: 15px;
+            border-bottom-left-radius: 15px;
+        }
+        .table tbody tr td:last-child {
+            border-top-right-radius: 15px;
+            border-bottom-right-radius: 15px;
+        }
+
+        /* =========================================
+           AUTHOR HIGHLIGHT
+           ========================================= */
+        .author-text {
+            color: var(--primary-cyan) !important;
+            font-weight: 800;
+            font-size: 1.1em;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+            letter-spacing: 0.5px;
+        }
+
+        /* Badge author in Books */
+        .badge-author {
+            background-color: rgba(139, 92, 246, 0.2) !important;
+            border: 1px solid var(--primary-violet);
+            color: #E2E8F0 !important;
+            padding: 8px 12px;
+            font-size: 0.9em;
+            transition: all 0.3s;
+        }
+        .badge-author:hover {
+            background-color: var(--primary-violet) !important;
+            color: white !important;
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+        }
+
+        /* =========================================
+           BUTTONS & ACTIONS LAYOUT
+           ========================================= */
+        /* Center and space out buttons in the last column */
+        .table tbody td:last-child {
+            display: flex;
+            gap: 10px; /* Space out buttons */
+            justify-content: center; /* Center align */
+            align-items: center;
+            border-bottom: none; /* fix visual glitch if flex breaks border */
+        }
+
+        .btn {
+            border-radius: 50px; /* Round Pill */
+            text-transform: uppercase;
+            font-weight: 800;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 8px 16px; /* Larger hit area */
+        }
+
+        /* Inside White Table -> Buttons need to pop */
+        
+        /* Details (Info) */
+        .btn-info, a.btn-info {
+            background-color: #0EA5E9 !important; /* Sky Blue */
+            color: white !important;
+            border: none;
+        }
+        .btn-info::after, a.btn-info::after { content: " CHI TIẾT"; margin-left: 6px; }
+
+        /* Edit (Primary) */
+        .btn-warning, a.btn-warning {
+            background-color: #F59E0B !important; /* Amber/Orange for Visibility */
+            color: black !important;
+            border: none;
+        }
+        .btn-warning::after, a.btn-warning::after { content: " SỬA"; margin-left: 6px; }
+
+        /* Clear Filter / Secondary (Light Gray) */
+        .btn-outline-secondary, a.btn-outline-secondary {
+            background-color: #94A3B8 !important; /* Visible Slate Gray */
+            color: #000000 !important; /* Pure Black Text */
+            border: 2px solid #64748B; /* Add border for definition */
+            font-weight: 700;
+        }
+        .btn-outline-secondary:hover, a.btn-outline-secondary:hover {
+            background-color: #CBD5E1 !important;
+            color: #000 !important;
+        }
+        
+        /* Primary fallback */
+        .btn-primary, a.btn-primary {
+            background-color: #7C3AED !important; /* Violet */
+            color: white !important;
+            border: none;
+        }
+
+        /* Delete (Danger) */
+        .btn-danger, a.btn-danger {
+            background-color: #EF4444 !important; /* Red */
+            color: white !important;
+            border: none;
+        }
+        .btn-danger::after, a.btn-danger::after { content: " XÓA"; margin-left: 6px; }
+
+
+
+        .form-control {
+            background: #1E293B;
+            border: 1px solid #334155;
+            color: white;
+            border-radius: 10px;
+        }
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            opacity: 0.6;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-container"></div>
+
+    <nav class="navbar navbar-expand-lg fixed-top navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">NEBULA ARCHIVE</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navContent">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/Books">Books</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Authors">Authors</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container main-content">
+        @RenderBody()
+    </div>
+
+    <footer>
+        &copy; 2026 LibraryManagement
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        // DEEPMIND NEBULA - PARTICLES
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('canvas-container');
+            if(!container) return;
+
+            const scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x0F172A, 0.002);
+
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
+            camera.position.z = 80;
+
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            container.appendChild(renderer.domElement);
+
+            // Particles
+            const particlesCount = 300;
+            const posArray = new Float32Array(particlesCount * 3);
+            for(let i = 0; i < particlesCount * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 500;
+            }
+            
+            const geometry = new THREE.BufferGeometry();
+            geometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            
+            const material = new THREE.PointsMaterial({
+                color: 0x00F0FF,
+                size: 2,
+                transparent: true,
+                opacity: 0.8
+            });
+
+            const particlesMesh = new THREE.Points(geometry, material);
+            scene.add(particlesMesh);
+
+            // Connecting Lines
+            const lineMat = new THREE.LineBasicMaterial({ color: 0x8B5CF6, transparent: true, opacity: 0.15 });
+            const lineGeo = new THREE.BufferGeometry();
+            const linesMesh = new THREE.LineSegments(lineGeo, lineMat);
+            scene.add(linesMesh);
+
+            function animate() {
+                requestAnimationFrame(animate);
+                scene.rotation.y += 0.001;
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        });
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

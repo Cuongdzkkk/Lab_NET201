@@ -1,0 +1,169 @@
+@* Views/Student/Index.cshtml *@
+@* Trang hiển thị tất cả students với courses *@
+@* Demo kết quả của Lazy Loading *@
+
+@model List<Lab8_LazyLoading.Models.Student>
+
+@{
+    ViewData["Title"] = "Bài 2: Lazy Loading - Quản lý học sinh";
+}
+
+<div class="container mt-4">
+    @* Header với giải thích *@
+    <div class="card bg-success text-white mb-4">
+        <div class="card-body">
+            <h2 class="card-title">
+                <i class="bi bi-hourglass-split"></i> BÀI 2: LAZY LOADING
+            </h2>
+            <p class="card-text mb-0">
+                <strong>Lazy Loading</strong> tự động load dữ liệu liên quan khi bạn truy cập navigation property.
+                Sử dụng từ khóa <code>virtual</code> và package <code>Microsoft.EntityFrameworkCore.Proxies</code>
+            </p>
+        </div>
+    </div>
+
+    @* Phần giải thích code *@
+    <div class="alert alert-warning mb-4">
+        <h5><i class="bi bi-exclamation-triangle"></i> Cách cấu hình Lazy Loading:</h5>
+        <ol>
+            <li>Cài package: <code>Microsoft.EntityFrameworkCore.Proxies</code></li>
+            <li>Cấu hình DbContext: <code>.UseLazyLoadingProxies()</code></li>
+            <li>Navigation properties phải là <code>virtual</code></li>
+        </ol>
+        
+        <pre class="bg-dark text-light p-3 rounded mt-3"><code>// Model với virtual property
+public class Student
+{
+    public virtual ICollection&lt;Course&gt; Courses { get; set; }
+}
+
+// Cấu hình trong Program.cs
+builder.Services.AddDbContext&lt;SchoolDbContext&gt;(options =>
+    options.UseLazyLoadingProxies()  // Bật Lazy Loading
+           .UseSqlServer(connectionString));
+
+// Service - KHÔNG cần .Include()
+var students = await _context.Students.ToListAsync();
+// Courses sẽ tự động load khi truy cập!</code></pre>
+    </div>
+
+    @* Nút demo *@
+    <div class="mb-4">
+        <a asp-action="N1Problem" class="btn btn-danger">
+            <i class="bi bi-bug"></i> Demo N+1 Problem
+        </a>
+    </div>
+
+    @* Thống kê *@
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card bg-info text-white">
+                <div class="card-body text-center">
+                    <h3>@Model.Count</h3>
+                    <p class="mb-0">Học sinh</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-primary text-white">
+                <div class="card-body text-center">
+                    @* ⚡ LAZY LOADING xảy ra ở đây! *@
+                    <h3>@Model.Sum(s => s.Courses.Count)</h3>
+                    <p class="mb-0">Khóa học</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-warning text-dark">
+                <div class="card-body text-center">
+                    <h3>@(Model.Count + 1)</h3>
+                    <p class="mb-0">Số queries (N+1)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* Cảnh báo N+1 *@
+    <div class="alert alert-danger mb-4">
+        <h5><i class="bi bi-exclamation-circle"></i> Cảnh báo N+1 Problem:</h5>
+        <p class="mb-0">
+            Khi render trang này, EF Core đã chạy <strong>@(Model.Count + 1) queries</strong>:
+            1 query để lấy Students + @Model.Count queries để lấy Courses của mỗi Student.
+            <br/>
+            <strong>Giải pháp:</strong> Sử dụng Eager Loading (.Include()) nếu biết trước cần load dữ liệu gì!
+        </p>
+    </div>
+
+    @* Danh sách Students với Courses *@
+    @foreach (var student in Model)
+    {
+        <div class="card mb-4 shadow">
+            <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">
+                    <i class="bi bi-person-circle"></i> @student.Name
+                </h4>
+                <div>
+                    <a asp-action="Details" asp-route-id="@student.StudentId" 
+                       class="btn btn-sm btn-outline-light">
+                        <i class="bi bi-eye"></i> Chi tiết
+                    </a>
+                    @* ⚡ LAZY LOADING: Query được chạy khi truy cập student.Courses.Count *@
+                    <span class="badge bg-success">
+                        @student.Courses.Count khóa học
+                    </span>
+                </div>
+            </div>
+            <div class="card-body">
+                <p class="mb-2">
+                    <i class="bi bi-envelope"></i> Email: @student.Email
+                    @if (student.DateOfBirth.HasValue)
+                    {
+                        <span class="ms-3">
+                            <i class="bi bi-calendar"></i> Sinh: @student.DateOfBirth.Value.ToString("dd/MM/yyyy")
+                        </span>
+                    }
+                </p>
+
+                @* Danh sách khóa học - Đã được Lazy Load *@
+                @if (student.Courses.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-sm table-striped mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Khóa học</th>
+                                    <th>Mô tả</th>
+                                    <th class="text-center">Tín chỉ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var course in student.Courses)
+                                {
+                                    <tr>
+                                        <td><i class="bi bi-book"></i> @course.Title</td>
+                                        <td class="text-muted">@course.Description</td>
+                                        <td class="text-center">
+                                            <span class="badge bg-primary">@course.Credits</span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted mb-0"><i class="bi bi-inbox"></i> Chưa đăng ký khóa học nào</p>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        console.log("=== LAZY LOADING DEMO ===");
+        console.log("⚡ Dữ liệu Courses được load TỰ ĐỘNG khi View truy cập property!");
+        console.log("⚠️ Chú ý N+1 Problem: Mỗi student = 1 query thêm");
+    </script>
+}

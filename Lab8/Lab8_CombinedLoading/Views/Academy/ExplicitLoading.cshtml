@@ -1,0 +1,103 @@
+@* Views/Academy/ExplicitLoading.cshtml *@
+@* Demo Explicit Loading *@
+
+@model Lab8_CombinedLoading.Models.Student
+
+@{
+    ViewData["Title"] = "Explicit Loading Demo";
+}
+
+<div class="container mt-4">
+    @* Header *@
+    <div class="card bg-info text-white mb-4">
+        <div class="card-body">
+            <h2><i class="bi bi-hand-index"></i> EXPLICIT LOADING DEMO</h2>
+            <p class="mb-0">Dữ liệu được load <strong>thủ công</strong> với Entry().Collection().LoadAsync()</p>
+        </div>
+    </div>
+
+    @* Code example *@
+    <div class="alert alert-secondary mb-4">
+        <h5>Code sử dụng:</h5>
+        <pre class="bg-dark text-light p-3 rounded"><code>// Query 1: Lấy Student
+var student = await _context.Students.FindAsync(studentId);
+
+// Query 2: EXPLICIT LOAD Enrollments với Courses
+await _context.Entry(student)
+    .Collection(s => s.Enrollments)
+    .Query()
+    .Include(e => e.Course)  // Có thể kết hợp Include
+    .LoadAsync();</code></pre>
+    </div>
+
+    @* Student info *@
+    <div class="card shadow mb-4">
+        <div class="card-header bg-dark text-white">
+            <h4><i class="bi bi-person"></i> @Model.Name</h4>
+        </div>
+        <div class="card-body">
+            <p><strong>Lớp:</strong> @Model.Class | <strong>Email:</strong> @Model.Email</p>
+
+            <h5>Khóa học (đã được Explicit Load):</h5>
+            <table class="table table-striped">
+                <thead class="table-light">
+                    <tr>
+                        <th>Khóa học</th>
+                        <th>Giáo viên</th>
+                        <th class="text-center">Điểm</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var enrollment in Model.Enrollments)
+                    {
+                        <tr>
+                            <td>@enrollment.Course?.Title</td>
+                            <td>@enrollment.Course?.Instructor</td>
+                            <td class="text-center">
+                                @if (enrollment.Grade.HasValue)
+                                {
+                                    <span class="badge bg-primary">@enrollment.Grade.Value.ToString("0.0")</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Chưa có</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    @* Select different student *@
+    @* Select different student *@
+    <div class="card mb-4">
+        <div class="card-body">
+            <form asp-action="ExplicitLoading" asp-route-id="" method="get" class="d-flex gap-2">
+                <select name="id" class="form-select">
+                    @{ var studentList = ViewBag.StudentList as List<Lab8_CombinedLoading.Models.Student>; }
+                    @if (studentList != null)
+                    {
+                        @foreach (var student in studentList)
+                        {
+                            if (Model.StudentId == student.StudentId)
+                            {
+                                <option value="@student.StudentId" selected>@student.Name</option>
+                            }
+                            else
+                            {
+                                <option value="@student.StudentId">@student.Name</option>
+                            }
+                        }
+                    }
+                </select>
+                <button type="submit" class="btn btn-info">Xem</button>
+            </form>
+        </div>
+    </div>
+
+    <a asp-action="Index" class="btn btn-primary">
+        <i class="bi bi-arrow-left"></i> Quay lại
+    </a>
+</div>

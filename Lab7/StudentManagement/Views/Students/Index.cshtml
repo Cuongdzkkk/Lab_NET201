@@ -1,0 +1,95 @@
+@model IEnumerable<StudentManagement.Models.Student>
+
+@{
+    ViewData["Title"] = "Danh Sách Sinh Viên";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-people-fill me-2"></i>Danh Sách Sinh Viên</h2>
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="bi bi-plus-circle me-1"></i>Thêm Sinh Viên
+    </a>
+</div>
+
+<!-- Form tìm kiếm sử dụng Native SQL -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form asp-action="Index" method="get" class="row g-3 align-items-center">
+            <div class="col-md-8">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input type="text" name="searchString" class="form-control" 
+                           placeholder="Tìm theo họ, tên hoặc email..." 
+                           value="@ViewBag.SearchString" />
+                </div>
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-primary me-2">
+                    <i class="bi bi-search me-1"></i>Tìm kiếm
+                </button>
+                <a asp-action="Index" class="btn btn-outline-secondary">
+                    <i class="bi bi-x-lg me-1"></i>Xóa
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        <table class="table table-striped table-hover mb-0">
+            <thead class="table-dark">
+                <tr>
+                    <th style="width: 60px;">ID</th>
+                    <th>Họ</th>
+                    <th>Tên</th>
+                    <th>Ngày Sinh</th>
+                    <th>Email</th>
+                    <th style="width: 200px;">Thao Tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.StudentId</td>
+                            <td>@item.FirstName</td>
+                            <td>@item.LastName</td>
+                            <td>@item.DateOfBirth.ToString("dd/MM/yyyy")</td>
+                            <td>@(item.Email ?? "N/A")</td>
+                            <td>
+                                <a asp-action="Details" asp-route-id="@item.StudentId" class="btn btn-info btn-sm" title="Chi tiết">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a asp-action="Edit" asp-route-id="@item.StudentId" class="btn btn-warning btn-sm" title="Sửa">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.StudentId" class="btn btn-danger btn-sm" title="Xóa">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" class="text-center py-4">
+                            <i class="bi bi-inbox display-4 text-muted d-block mb-2"></i>
+                            <span class="text-muted">Chưa có sinh viên nào trong hệ thống</span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@if (Model != null && Model.Any())
+{
+    <div class="text-muted mt-3">
+        <i class="bi bi-info-circle me-1"></i>Tổng cộng: <strong>@Model.Count()</strong> sinh viên
+    </div>
+}

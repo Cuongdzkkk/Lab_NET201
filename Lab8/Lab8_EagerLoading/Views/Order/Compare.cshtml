@@ -1,0 +1,148 @@
+@* Views/Order/Compare.cshtml *@
+@* Trang so sánh hiệu năng Eager Loading vs Raw SQL *@
+
+@model List<Lab8_EagerLoading.Models.Customer>
+
+@{
+    ViewData["Title"] = "So sánh Eager Loading vs Raw SQL";
+}
+
+<div class="container mt-4">
+    <div class="card bg-warning mb-4">
+        <div class="card-body">
+            <h2 class="card-title">
+                <i class="bi bi-speedometer2"></i> SO SÁNH HIỆU NĂNG
+            </h2>
+            <p class="card-text">So sánh giữa Eager Loading (EF Core) và Raw SQL Query</p>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        @* Eager Loading Results *@
+        <div class="col-md-6">
+            <div class="card h-100 border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h4><i class="bi bi-lightning-charge"></i> Eager Loading</h4>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <h1 class="display-4 text-primary">@ViewBag.EagerTime ms</h1>
+                        <p class="text-muted">Thời gian thực thi</p>
+                    </div>
+                    
+                    <h5>Ưu điểm:</h5>
+                    <ul class="list-group list-group-flush mb-3">
+                        <li class="list-group-item list-group-item-success">
+                            <i class="bi bi-check-circle"></i> Tự động map vào objects
+                        </li>
+                        <li class="list-group-item list-group-item-success">
+                            <i class="bi bi-check-circle"></i> Type-safe, compile-time checking
+                        </li>
+                        <li class="list-group-item list-group-item-success">
+                            <i class="bi bi-check-circle"></i> Dễ bảo trì và thay đổi
+                        </li>
+                        <li class="list-group-item list-group-item-success">
+                            <i class="bi bi-check-circle"></i> Load nested objects tự động
+                        </li>
+                    </ul>
+
+                    <h5>Nhược điểm:</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item list-group-item-danger">
+                            <i class="bi bi-x-circle"></i> SQL có thể không tối ưu nhất
+                        </li>
+                        <li class="list-group-item list-group-item-danger">
+                            <i class="bi bi-x-circle"></i> Có thể load dư thừa dữ liệu
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        @* Raw SQL Results *@
+        <div class="col-md-6">
+            <div class="card h-100 border-secondary">
+                <div class="card-header bg-secondary text-white">
+                    <h4><i class="bi bi-database"></i> Raw SQL</h4>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <h1 class="display-4 text-secondary">@ViewBag.RawSqlTime ms</h1>
+                        <p class="text-muted">Thời gian thực thi</p>
+                    </div>
+                    
+                    <h5>Ưu điểm:</h5>
+                    <ul class="list-group list-group-flush mb-3">
+                        <li class="list-group-item list-group-item-success">
+                            <i class="bi bi-check-circle"></i> Có thể viết SQL tối ưu
+                        </li>
+                        <li class="list-group-item list-group-item-success">
+                            <i class="bi bi-check-circle"></i> Linh hoạt với complex queries
+                        </li>
+                        <li class="list-group-item list-group-item-success">
+                            <i class="bi bi-check-circle"></i> Sử dụng được stored procedures
+                        </li>
+                    </ul>
+
+                    <h5>Nhược điểm:</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item list-group-item-danger">
+                            <i class="bi bi-x-circle"></i> Không tự động map nested objects
+                        </li>
+                        <li class="list-group-item list-group-item-danger">
+                            <i class="bi bi-x-circle"></i> Không type-safe
+                        </li>
+                        <li class="list-group-item list-group-item-danger">
+                            <i class="bi bi-x-circle"></i> Khó bảo trì khi đổi schema
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* SQL Equivalent *@
+    <div class="card mb-4">
+        <div class="card-header bg-dark text-white">
+            <h5><i class="bi bi-code-slash"></i> Câu SQL thuần tương đương với Eager Loading</h5>
+        </div>
+        <div class="card-body">
+            <pre class="bg-light p-3 rounded"><code>-- SQL Query tương đương với Eager Loading
+SELECT 
+    c.CustomerId, c.Name, c.Phone,
+    o.OrderId, o.OrderDate, o.TotalAmount, o.Status,
+    d.DishId, d.Name AS DishName, d.Price, d.Quantity
+FROM Customers c
+LEFT JOIN Orders o ON c.CustomerId = o.CustomerId
+LEFT JOIN Dishes d ON o.OrderId = d.OrderId
+ORDER BY c.CustomerId, o.OrderId, d.DishId;
+
+-- Hoặc với thống kê:
+SELECT 
+    c.Name AS CustomerName,
+    COUNT(DISTINCT o.OrderId) AS TotalOrders,
+    SUM(o.TotalAmount) AS TotalSpent
+FROM Customers c
+LEFT JOIN Orders o ON c.CustomerId = o.CustomerId
+GROUP BY c.CustomerId, c.Name;</code></pre>
+        </div>
+    </div>
+
+    @* Kết luận *@
+    <div class="alert alert-success">
+        <h5><i class="bi bi-lightbulb"></i> Kết luận:</h5>
+        <p>
+            <strong>Eager Loading</strong> là lựa chọn tốt nhất khi:
+        </p>
+        <ul class="mb-0">
+            <li>Biết trước cần load những dữ liệu liên quan nào</li>
+            <li>Muốn tránh N+1 query problem</li>
+            <li>Cần type-safe và dễ bảo trì</li>
+            <li>Số lượng dữ liệu liên quan không quá lớn</li>
+        </ul>
+    </div>
+
+    <a asp-action="Index" class="btn btn-primary">
+        <i class="bi bi-arrow-left"></i> Quay lại
+    </a>
+</div>

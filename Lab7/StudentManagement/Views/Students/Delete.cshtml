@@ -1,0 +1,50 @@
+@model StudentManagement.Models.Student
+
+@{
+    ViewData["Title"] = "Xóa Sinh Viên";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Xác Nhận Xóa</h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <i class="bi bi-exclamation-circle me-2"></i>
+                    <strong>Cảnh báo:</strong> Bạn có chắc chắn muốn xóa sinh viên này? Hành động này không thể hoàn tác!
+                </div>
+
+                <dl class="row">
+                    <dt class="col-sm-4">ID</dt>
+                    <dd class="col-sm-8">@Model.StudentId</dd>
+
+                    <dt class="col-sm-4">Họ</dt>
+                    <dd class="col-sm-8">@Model.FirstName</dd>
+
+                    <dt class="col-sm-4">Tên</dt>
+                    <dd class="col-sm-8">@Model.LastName</dd>
+
+                    <dt class="col-sm-4">Ngày Sinh</dt>
+                    <dd class="col-sm-8">@Model.DateOfBirth.ToString("dd/MM/yyyy")</dd>
+
+                    <dt class="col-sm-4">Email</dt>
+                    <dd class="col-sm-8">@(Model.Email ?? "Không có")</dd>
+                </dl>
+
+                <form asp-action="Delete">
+                    <input type="hidden" asp-for="StudentId" />
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash me-1"></i>Xác Nhận Xóa
+                        </button>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="bi bi-x-lg me-1"></i>Hủy
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

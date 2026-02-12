@@ -1,0 +1,62 @@
+@model LibraryManagement.Models.Book
+
+@{
+    ViewData["Title"] = "Chi Tiết Sách";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h4 class="mb-0"><i class="bi bi-book me-2"></i>Chi Tiết Sách</h4>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-4">ID</dt>
+                    <dd class="col-sm-8">@Model.BookId</dd>
+
+                    <dt class="col-sm-4">Tên Sách</dt>
+                    <dd class="col-sm-8"><strong>@Model.BookTitle</strong></dd>
+
+                    <dt class="col-sm-4">Năm Xuất Bản</dt>
+                    <dd class="col-sm-8">
+                        @if (Model.PublicationYear.HasValue)
+                        {
+                            <span class="badge bg-secondary">@Model.PublicationYear</span>
+                        }
+                        else
+                        {
+                            <span class="text-muted">Không có</span>
+                        }
+                    </dd>
+
+                    <dt class="col-sm-4">Tác Giả</dt>
+                    <dd class="col-sm-8">
+                        @if (Model.Author != null)
+                        {
+                            <a asp-controller="Authors" asp-action="Details" asp-route-id="@Model.AuthorId" 
+                               class="badge badge-author text-white text-decoration-none">
+                                <i class="bi bi-person me-1"></i>@Model.Author.AuthorName
+                            </a>
+                        }
+                        else
+                        {
+                            <span class="text-muted">Không xác định</span>
+                        }
+                    </dd>
+                </dl>
+            </div>
+            <div class="card-footer">
+                <a asp-action="Edit" asp-route-id="@Model.BookId" class="btn btn-warning">
+                    <i class="bi bi-pencil me-1"></i>Chỉnh Sửa
+                </a>
+                <a asp-action="Delete" asp-route-id="@Model.BookId" class="btn btn-danger">
+                    <i class="bi bi-trash me-1"></i>Xóa
+                </a>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left me-1"></i>Quay Lại
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

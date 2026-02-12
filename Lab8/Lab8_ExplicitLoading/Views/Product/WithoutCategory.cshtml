@@ -1,0 +1,60 @@
+@* Views/Product/WithoutCategory.cshtml *@
+@* Hiển thị products mà KHÔNG load Category *@
+
+@model List<Lab8_ExplicitLoading.Models.Product>
+
+@{
+    ViewData["Title"] = "Products không load Category";
+}
+
+<div class="container mt-4">
+    <div class="alert alert-danger">
+        <h4><i class="bi bi-exclamation-triangle"></i> Demo: Products KHÔNG load Category</h4>
+        <p class="mb-0">
+            Các products dưới đây được lấy mà KHÔNG sử dụng Explicit Loading.
+            Category sẽ là NULL vì chưa được load!
+        </p>
+    </div>
+
+    <table class="table table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Tên sản phẩm</th>
+                <th>Category</th>
+                <th>CategoryId</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in Model)
+            {
+                <tr>
+                    <td>@product.ProductId</td>
+                    <td>@product.Name</td>
+                    <td>
+                        @if (product.Category != null)
+                        {
+                            <span class="badge bg-success">@product.Category.CategoryName</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">NULL (chưa load)</span>
+                        }
+                    </td>
+                    <td>@product.CategoryId</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="alert alert-warning">
+        <strong>Giải pháp:</strong> Sử dụng Explicit Loading để load Category khi cần:
+        <pre class="bg-dark text-light p-2 mt-2 rounded"><code>await _context.Entry(product)
+    .Reference(p => p.Category)
+    .LoadAsync();</code></pre>
+    </div>
+
+    <a asp-action="Index" class="btn btn-primary">
+        <i class="bi bi-arrow-left"></i> Quay lại (với Category)
+    </a>
+</div>

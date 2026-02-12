@@ -1,0 +1,137 @@
+@* Views/Product/Index.cshtml *@
+@* Trang hiển thị tất cả products với category *@
+@* Demo kết quả của Explicit Loading *@
+
+@model List<Lab8_ExplicitLoading.Models.Product>
+
+@{
+    ViewData["Title"] = "Bài 3: Explicit Loading - Quản lý cửa hàng";
+}
+
+<div class="container mt-4">
+    @* Header với giải thích *@
+    <div class="card bg-info text-white mb-4">
+        <div class="card-body">
+            <h2 class="card-title">
+                <i class="bi bi-hand-index"></i> BÀI 3: EXPLICIT LOADING
+            </h2>
+            <p class="card-text mb-0">
+                <strong>Explicit Loading</strong> cho phép bạn load dữ liệu liên quan một cách thủ công
+                sử dụng <code>.Entry().Reference().Load()</code> hoặc <code>.Entry().Collection().Load()</code>
+            </p>
+        </div>
+    </div>
+
+    @* Phần giải thích code *@
+    <div class="alert alert-secondary mb-4">
+        <h5><i class="bi bi-code-slash"></i> Explicit Loading - Reference (N-1):</h5>
+        <pre class="bg-dark text-light p-3 rounded"><code>// Bước 1: Lấy Product (Category chưa load)
+var product = await _context.Products.FindAsync(productId);
+
+// Bước 2: Load Category thủ công
+await _context.Entry(product)
+    .Reference(p => p.Category)    // Single navigation property
+    .LoadAsync();
+
+// Kiểm tra trước khi load
+if (!_context.Entry(product).Reference(p => p.Category).IsLoaded)
+{
+    await _context.Entry(product).Reference(p => p.Category).LoadAsync();
+}</code></pre>
+    </div>
+
+    @* Nút demo *@
+    <div class="mb-4">
+        <a asp-action="WithoutCategory" class="btn btn-warning">
+            <i class="bi bi-x-circle"></i> Xem Products không load Category
+        </a>
+    </div>
+
+    @* Thống kê *@
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card bg-primary text-white">
+                <div class="card-body text-center">
+                    <h3>@Model.Count</h3>
+                    <p class="mb-0">Sản phẩm</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card bg-success text-white">
+                <div class="card-body text-center">
+                    <h3>@Model.Select(p => p.CategoryId).Distinct().Count()</h3>
+                    <p class="mb-0">Danh mục</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* Bảng Products *@
+    <div class="card shadow">
+        <div class="card-header bg-dark text-white">
+            <h5 class="mb-0"><i class="bi bi-box"></i> Danh sách sản phẩm (Category đã được Explicit Load)</h5>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Danh mục</th>
+                        <th class="text-end">Giá</th>
+                        <th class="text-center">Tồn kho</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var product in Model)
+                    {
+                        <tr>
+                            <td>@product.ProductId</td>
+                            <td>
+                                <i class="bi bi-box-seam"></i> @product.Name
+                            </td>
+                            <td>
+                                @* Category đã được load thủ công *@
+                                @if (product.Category != null)
+                                {
+                                    <a asp-action="Category" asp-route-id="@product.CategoryId" 
+                                       class="badge bg-primary text-decoration-none">
+                                        @product.Category.CategoryName
+                                    </a>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">NULL (chưa load)</span>
+                                }
+                            </td>
+                            <td class="text-end text-success fw-bold">
+                                @product.Price.ToString("N0") VNĐ
+                            </td>
+                            <td class="text-center">
+                                <span class="badge @(product.Stock > 50 ? "bg-success" : product.Stock > 20 ? "bg-warning" : "bg-danger")">
+                                    @product.Stock
+                                </span>
+                            </td>
+                            <td>
+                                <a asp-action="Details" asp-route-id="@product.ProductId" 
+                                   class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-eye"></i> Chi tiết
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        console.log("=== EXPLICIT LOADING DEMO ===");
+        console.log("📌 Category được load THỦ CÔNG sau khi lấy Products");
+        console.log("💡 Bạn kiểm soát hoàn toàn KHI NÀO dữ liệu được load");
+    </script>
+}

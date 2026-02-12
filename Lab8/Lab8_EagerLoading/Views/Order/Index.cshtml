@@ -1,0 +1,163 @@
+@* Views/Order/Index.cshtml *@
+@* Trang hiển thị tất cả customers với orders và dishes *@
+@* Demo kết quả của Eager Loading *@
+
+@model List<Lab8_EagerLoading.Models.Customer>
+
+@{
+    ViewData["Title"] = "Bài 1: Eager Loading - Quản lý đặt hàng";
+}
+
+<div class="container mt-4">
+    @* Header với giải thích *@
+    <div class="card bg-primary text-white mb-4">
+        <div class="card-body">
+            <h2 class="card-title">
+                <i class="bi bi-lightning-charge"></i> BÀI 1: EAGER LOADING
+            </h2>
+            <p class="card-text mb-0">
+                <strong>Eager Loading</strong> là kỹ thuật load tất cả dữ liệu liên quan ngay lập tức 
+                trong 1 query duy nhất sử dụng <code>.Include()</code> và <code>.ThenInclude()</code>
+            </p>
+        </div>
+    </div>
+
+    @* Phần giải thích code *@
+    <div class="alert alert-info mb-4">
+        <h5><i class="bi bi-code-slash"></i> Code sử dụng:</h5>
+        <pre class="bg-dark text-light p-3 rounded"><code>// Eager Loading với Include và ThenInclude
+var customers = await _context.Customers
+    .Include(c => c.Orders)           // Load Orders của Customer
+        .ThenInclude(o => o.Dishes)   // Load Dishes của mỗi Order
+    .AsNoTracking()
+    .ToListAsync();</code></pre>
+    </div>
+
+    @* Nút so sánh performance *@
+    <div class="mb-4">
+        <a asp-action="Compare" class="btn btn-warning">
+            <i class="bi bi-speedometer2"></i> So sánh với Raw SQL
+        </a>
+        <a asp-action="AllOrders" class="btn btn-secondary">
+            <i class="bi bi-list-ul"></i> Xem tất cả đơn hàng
+        </a>
+    </div>
+
+    @* Thống kê *@
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card bg-success text-white">
+                <div class="card-body text-center">
+                    <h3>@Model.Count</h3>
+                    <p class="mb-0">Khách hàng</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-info text-white">
+                <div class="card-body text-center">
+                    <h3>@Model.Sum(c => c.Orders.Count)</h3>
+                    <p class="mb-0">Đơn hàng</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-warning text-dark">
+                <div class="card-body text-center">
+                    <h3>@Model.Sum(c => c.Orders.Sum(o => o.Dishes.Count))</h3>
+                    <p class="mb-0">Món ăn</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* Danh sách Customers với Orders và Dishes *@
+    @foreach (var customer in Model)
+    {
+        <div class="card mb-4 shadow">
+            <div class="card-header bg-dark text-white">
+                <h4 class="mb-0">
+                    <i class="bi bi-person-circle"></i> @customer.Name
+                    <span class="badge bg-light text-dark float-end">
+                        @customer.Orders.Count đơn hàng
+                    </span>
+                </h4>
+                <small>SĐT: @customer.Phone</small>
+            </div>
+            <div class="card-body">
+                @if (customer.Orders.Any())
+                {
+                    @foreach (var order in customer.Orders)
+                    {
+                        <div class="card mb-3 border-start border-primary border-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <span>
+                                    <i class="bi bi-receipt"></i> 
+                                    <strong>Đơn hàng #@order.OrderId</strong>
+                                </span>
+                                <span>
+                                    <span class="badge @(order.Status == "Hoàn thành" ? "bg-success" : 
+                                                        order.Status == "Đang giao" ? "bg-info" : "bg-warning")">
+                                        @order.Status
+                                    </span>
+                                </span>
+                            </div>
+                            <div class="card-body">
+                                <p class="mb-2">
+                                    <i class="bi bi-calendar"></i> Ngày đặt: @order.OrderDate.ToString("dd/MM/yyyy HH:mm")
+                                    <span class="float-end text-success fw-bold">
+                                        Tổng: @order.TotalAmount.ToString("N0") VNĐ
+                                    </span>
+                                </p>
+                                
+                                @* Danh sách món ăn *@
+                                @if (order.Dishes.Any())
+                                {
+                                    <table class="table table-sm table-striped">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Món ăn</th>
+                                                <th class="text-center">SL</th>
+                                                <th class="text-end">Đơn giá</th>
+                                                <th class="text-end">Thành tiền</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var dish in order.Dishes)
+                                            {
+                                                <tr>
+                                                    <td><i class="bi bi-cup-hot"></i> @dish.Name</td>
+                                                    <td class="text-center">@dish.Quantity</td>
+                                                    <td class="text-end">@dish.Price.ToString("N0")</td>
+                                                    <td class="text-end fw-bold">
+                                                        @((dish.Price * dish.Quantity).ToString("N0"))
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
+                                else
+                                {
+                                    <p class="text-muted">Chưa có món ăn</p>
+                                }
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="text-muted"><i class="bi bi-inbox"></i> Khách hàng chưa có đơn hàng nào</p>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        console.log("=== EAGER LOADING DEMO ===");
+        console.log("Tất cả dữ liệu đã được load trong 1 query duy nhất!");
+        console.log("Kiểm tra Network tab để xem chỉ có 1 request đến database");
+    </script>
+}

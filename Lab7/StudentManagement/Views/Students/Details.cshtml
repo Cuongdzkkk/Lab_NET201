@@ -1,0 +1,56 @@
+@model StudentManagement.Models.Student
+
+@{
+    ViewData["Title"] = "Chi Tiết Sinh Viên";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h4 class="mb-0"><i class="bi bi-person-badge me-2"></i>Chi Tiết Sinh Viên</h4>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-4">ID</dt>
+                    <dd class="col-sm-8">@Model.StudentId</dd>
+
+                    <dt class="col-sm-4">Họ</dt>
+                    <dd class="col-sm-8">@Model.FirstName</dd>
+
+                    <dt class="col-sm-4">Tên</dt>
+                    <dd class="col-sm-8">@Model.LastName</dd>
+
+                    <dt class="col-sm-4">Họ Tên Đầy Đủ</dt>
+                    <dd class="col-sm-8"><strong>@Model.FullName</strong></dd>
+
+                    <dt class="col-sm-4">Ngày Sinh</dt>
+                    <dd class="col-sm-8">@Model.DateOfBirth.ToString("dd/MM/yyyy")</dd>
+
+                    <dt class="col-sm-4">Email</dt>
+                    <dd class="col-sm-8">
+                        @if (!string.IsNullOrEmpty(Model.Email))
+                        {
+                            <a href="mailto:@Model.Email">@Model.Email</a>
+                        }
+                        else
+                        {
+                            <span class="text-muted">Không có</span>
+                        }
+                    </dd>
+                </dl>
+            </div>
+            <div class="card-footer">
+                <a asp-action="Edit" asp-route-id="@Model.StudentId" class="btn btn-warning">
+                    <i class="bi bi-pencil me-1"></i>Chỉnh Sửa
+                </a>
+                <a asp-action="Delete" asp-route-id="@Model.StudentId" class="btn btn-danger">
+                    <i class="bi bi-trash me-1"></i>Xóa
+                </a>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left me-1"></i>Quay Lại
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

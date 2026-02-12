@@ -1,0 +1,160 @@
+@* Views/Academy/Index.cshtml *@
+@* Trang chủ Lab 8 - Tổng quan về các loại Loading *@
+
+@{
+    ViewData["Title"] = "Bài 4: Combined Loading - Quản lý học sinh nâng cao";
+}
+
+<div class="container mt-4">
+    @* Header chính *@
+    <div class="card bg-gradient bg-primary text-white mb-4 shadow">
+        <div class="card-body text-center py-4">
+            <h1 class="display-5">
+                <i class="bi bi-database"></i> BÀI 4: COMBINED LOADING
+            </h1>
+            <p class="lead mb-0">
+                Kết hợp Eager, Lazy và Explicit Loading trong 1 ứng dụng
+            </p>
+        </div>
+    </div>
+
+    @* Cards cho từng loại loading *@
+    <div class="row mb-4">
+        @* Eager Loading *@
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 shadow">
+                <div class="card-header bg-success text-white">
+                    <h4><i class="bi bi-download"></i> EAGER LOADING</h4>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        Load tất cả dữ liệu liên quan <strong>ngay lập tức</strong> trong 1 query duy nhất.
+                    </p>
+                    <pre class="bg-dark text-light p-2 rounded small"><code>.Include(s => s.Enrollments)
+    .ThenInclude(e => e.Course)</code></pre>
+                    <p class="text-muted small">
+                        ✅ Hiệu quả khi biết trước cần dữ liệu gì<br>
+                        ⚠️ Query có thể lớn nếu nhiều relationships
+                    </p>
+                </div>
+                <div class="card-footer">
+                    <a asp-action="EagerLoading" class="btn btn-success w-100">
+                        <i class="bi bi-play"></i> Demo Eager Loading
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        @* Lazy Loading *@
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 shadow">
+                <div class="card-header bg-warning text-dark">
+                    <h4><i class="bi bi-hourglass-split"></i> LAZY LOADING</h4>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        Load dữ liệu <strong>tự động</strong> khi truy cập navigation property.
+                    </p>
+                    <pre class="bg-dark text-light p-2 rounded small"><code>// Navigation property virtual
+public virtual ICollection&lt;Enrollment&gt;
+
+// Config
+UseLazyLoadingProxies()</code></pre>
+                    <p class="text-muted small">
+                        ✅ Tiện lợi, code đơn giản<br>
+                        ⚠️ Cẩn thận N+1 Problem!
+                    </p>
+                </div>
+                <div class="card-footer">
+                    <a asp-action="LazyLoading" asp-route-id="1" class="btn btn-warning w-100">
+                        <i class="bi bi-play"></i> Demo Lazy Loading
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        @* Explicit Loading *@
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 shadow">
+                <div class="card-header bg-info text-white">
+                    <h4><i class="bi bi-hand-index"></i> EXPLICIT LOADING</h4>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        Load dữ liệu <strong>thủ công</strong> khi cần thiết, kiểm soát hoàn toàn.
+                    </p>
+                    <pre class="bg-dark text-light p-2 rounded small"><code>await _context.Entry(student)
+    .Collection(s => s.Enrollments)
+    .LoadAsync();</code></pre>
+                    <p class="text-muted small">
+                        ✅ Linh hoạt, load có điều kiện<br>
+                        ⚠️ Phải viết code thủ công
+                    </p>
+                </div>
+                <div class="card-footer">
+                    <a asp-action="ExplicitLoading" asp-route-id="1" class="btn btn-info w-100">
+                        <i class="bi bi-play"></i> Demo Explicit Loading
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* Bảng so sánh *@
+    <div class="card mb-4 shadow">
+        <div class="card-header bg-dark text-white">
+            <h5><i class="bi bi-table"></i> So sánh các loại Loading</h5>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead class="table-light">
+                    <tr>
+                        <th>Tiêu chí</th>
+                        <th class="text-success">Eager Loading</th>
+                        <th class="text-warning">Lazy Loading</th>
+                        <th class="text-info">Explicit Loading</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Thời điểm load</strong></td>
+                        <td>Ngay lập tức</td>
+                        <td>Khi truy cập property</td>
+                        <td>Khi gọi LoadAsync()</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Số queries</strong></td>
+                        <td>1 query lớn</td>
+                        <td>N+1 queries</td>
+                        <td>Tùy ý kiểm soát</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Config</strong></td>
+                        <td>.Include()</td>
+                        <td>virtual + Proxies</td>
+                        <td>Entry().Load()</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Use case</strong></td>
+                        <td>Liệt kê danh sách</td>
+                        <td>Không chắc cần data</td>
+                        <td>Load có điều kiện</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    @* So sánh với SQL *@
+    <div class="card shadow">
+        <div class="card-header bg-secondary text-white">
+            <h5><i class="bi bi-speedometer2"></i> So sánh EF Core vs Raw SQL</h5>
+        </div>
+        <div class="card-body text-center">
+            <p>So sánh hiệu năng và kết quả giữa EF Core LINQ và Raw SQL queries</p>
+            <a asp-action="Compare" class="btn btn-lg btn-secondary">
+                <i class="bi bi-bar-chart"></i> Xem So Sánh
+            </a>
+        </div>
+    </div>
+</div>
